@@ -1,0 +1,94 @@
+# Ratio·9
+
+> A free, open-source guitar speed trainer and metronome built around
+> subdivision ratio training. Two loops alternate between different
+> subdivisions at one fixed BPM, so the ratio between them forces the speed
+> jump instead of the tempo dial. Runs entirely in the browser, installs as a
+> PWA, works offline, no account and no backend.
+
+Site: https://ratio9.frankbirzle.de/
+Source: https://github.com/frankbirzle/ratio9 (MIT)
+Author: Frank Birzle. Non-commercial side project.
+
+The app is a client-rendered single-page app and its articles live behind hash
+routes, so a crawler cannot reach them as separate URLs. This file carries the
+substance instead.
+
+## What subdivision ratio training is
+
+Set the click to 100 BPM. Play two bars of eighth-note triplets, three notes
+per beat, then two bars of sextuplets, six notes per beat, without touching the
+click. The pulse never moved and the picking hand just doubled its speed.
+
+Getting from 300 to 600 notes per minute by tempo instead would mean dragging
+the metronome from 100 to 200 BPM and surviving every broken tempo in between.
+Changing the subdivision reaches the fast motion immediately, against a beat
+that stays put, so when the fast pass drifts it is audible against a reference
+that did not shift. The slow pass resets the motion, the fast pass pushes it.
+
+## Modes
+
+- **Ratios** — two loops, two subdivisions, one fixed BPM. Independent bar
+  counts per loop, configurable rest beats between them so the picking hand can
+  reset, and a count-in before the first round.
+- **Speed** — progressive tempo. The BPM ramps automatically after N bars along
+  one of four curves: linear, logarithmic, stepback and pyramid.
+- **Metronome** — a straight click: 8 subdivisions, 7 time signatures,
+  configurable accent grouping.
+
+## Sound
+
+Nine engines, synthesized in the Web Audio graph at click time rather than
+loaded as samples (only rim shot and tabla use samples, both CC0). The default,
+Super Click, voices its three tiers separately instead of just louder and
+higher: 1237 Hz accents, 996 Hz on-beats, 825 Hz subdivisions, each a short FM
+beep with its own length and attack. Accents, beats and subdivisions have
+independent volume, and subdivision clicks can be switched off.
+
+## Practice tooling
+
+Saved presets in localStorage, tap tempo, a countdown practice timer, an in-app
+field manual, and keyboard shortcuts (Space start/stop, 1/2/3 modes, T tap
+tempo, arrow keys tempo, S setup, Esc close). Amber-on-dark UI with
+reduced-motion support.
+
+## The method, in order
+
+Add one variable at a time.
+
+1. One note, one string, picking hand only. Ratios at a slow tempo, 2 beats each way.
+2. Extend the fast pass: 2 beats, then 4, then 8.
+3. Add the fretting hand. Synchronisation only, picking hand stays relaxed.
+4. Three notes. Back to 2 beats, build to 8.
+5. Extend up the scale, including position shifts.
+6. Only then raise the tempo, and rebuild from one note, because the fast
+   motion is a different motion.
+
+## In-app articles
+
+Readable at https://ratio9.frankbirzle.de/ under the field manual.
+
+- **Why I built a ratio trainer instead of another metronome** — a book about
+  talent hotbeds, five YouTube guitarists saying variations of the same thing,
+  and a plateau that would not move.
+- **The three zones, and why only one of them builds speed** — comfort, edge of
+  ability, speed burst. Most players spend a whole session in the wrong one.
+- **The myelin story, and what actually survives scrutiny** — the "perfect reps
+  wrap myelin around the circuit" claim, and why the evidence is thinner than
+  the guitar internet suggests.
+- **How I actually use the speed trainer** — the exact routine, start to finish.
+
+## Technical
+
+React 19 and TypeScript on Vite 8, React as the only runtime dependency. No
+backend, no API keys, no analytics, no third-party requests (fonts are
+self-hosted). The audio scheduler uses lookahead scheduling against
+AudioContext.currentTime rather than timers, with a guard against catch-up
+bursts when a background tab is throttled. Deployed as static assets on
+Cloudflare Workers.
+
+## Credits
+
+The method is assembled from people who explain it better: NathanGuitar (the
+direct inspiration for the ratios mode), Troy Grady on picking mechanics, and
+JustinGuitar, Ben Eller, Bernth, Lukas Kocka and Matt Wright Music.

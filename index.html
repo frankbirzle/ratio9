@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Ratio·9 — Guitar speed trainer with dual-loop subdivision ratio practice, progressive tempo, and 8 click sounds."
+      content="Ratio·9 is a free, open-source guitar speed trainer and metronome. Two loops alternate subdivisions at one fixed BPM, so the ratio forces the speed jump instead of the tempo dial. Progressive tempo curves, nine click sounds, works offline."
     />
+    <link rel="canonical" href="https://ratio9.frankbirzle.de/" />
     <meta property="og:title" content="Ratio·9 — Guitar Speed Trainer" />
-    <meta property="og:description" content="Dual-loop subdivision ratio metronome for guitarists. Build picking speed systematically." />
+    <meta property="og:description" content="Free open-source guitar speed trainer with ratio-based subdivision training. Two loops, two subdivisions, one fixed BPM." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://ratio9.frankbirzle.de" />
     <meta property="og:image" content="https://ratio9.frankbirzle.de/favicons/icon-512.png" />
@@ -31,9 +32,132 @@
       crossorigin
     />
     <title>Ratio·9 — Guitar Speed Trainer</title>
+
+    <!-- Machine-readable description of the app. The UI is a client-rendered
+         SPA, so without this a crawler that does not run JavaScript sees an
+         empty page. Keep it in sync with the noscript block below. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "SoftwareApplication",
+            "@id": "https://ratio9.frankbirzle.de/#app",
+            "name": "Ratio·9",
+            "alternateName": "Ratio 9",
+            "applicationCategory": "MultimediaApplication",
+            "applicationSubCategory": "Metronome and guitar speed trainer",
+            "operatingSystem": "Web browser (progressive web app, installable, works offline)",
+            "url": "https://ratio9.frankbirzle.de/",
+            "description": "A free, open-source guitar speed trainer built around subdivision ratio training: two loops alternate between different subdivisions at one fixed BPM, so the ratio between them forces the speed jump instead of nudging the tempo dial. Also includes a progressive tempo mode with four ramp curves and a plain metronome.",
+            "featureList": [
+              "Ratios mode: two loops, two subdivisions, one fixed BPM, configurable bars per loop and rest beats between them",
+              "Speed mode: progressive tempo with linear, logarithmic, stepback and pyramid curves",
+              "Metronome mode: 8 subdivisions, 7 time signatures, configurable accent grouping",
+              "Nine click sounds synthesized in the Web Audio graph, with per-tier volume for accents, beats and subdivisions",
+              "Saved presets, count-in, countdown practice timer, tap tempo, keyboard shortcuts",
+              "Installable PWA that works offline, no account and no backend"
+            ],
+            "softwareVersion": "1.0.0",
+            "license": "https://opensource.org/licenses/MIT",
+            "isAccessibleForFree": true,
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "EUR"
+            },
+            "author": {
+              "@type": "Person",
+              "name": "Frank Birzle"
+            },
+            "codeRepository": "https://github.com/frankbirzle/ratio9"
+          },
+          {
+            "@type": "FAQPage",
+            "@id": "https://ratio9.frankbirzle.de/#faq",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "What is subdivision ratio training?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Subdivision ratio training builds speed by changing how many notes you play per beat instead of changing the tempo. At 100 BPM, eighth-note triplets are three notes per beat and sextuplets are six, so switching between them doubles your picking speed while the click never moves. The fixed pulse stays as a reference, so when the fast pass drifts you hear it immediately."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How is that different from a normal metronome?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "A normal metronome asks you to raise the tempo in small steps and survive every awkward speed in between. Ratio training puts you at the fast motion straight away against an unchanged beat, then drops you back to the slow subdivision to reset the motion. Ratio·9 runs both loops automatically with independent bar counts and optional rest beats between them."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Is Ratio·9 free?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes. Ratio·9 is free, open source under the MIT license, has no accounts, no tracking and no backend. It runs entirely in the browser and can be installed as a progressive web app that works offline."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What is the progressive tempo mode for?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Speed mode raises the BPM automatically after a set number of bars, using one of four curves: linear, logarithmic, stepback (which drops back before pushing further) and pyramid (which climbs and then descends). It is for drilling a phrase across a tempo range without stopping to touch the dial."
+                }
+              }
+            ]
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
+    <noscript>
+      <h1>Ratio·9 — a guitar speed trainer built on subdivision ratios</h1>
+      <p>
+        Ratio·9 needs JavaScript, because the click is scheduled in the Web Audio
+        graph in your browser. Here is what it does.
+      </p>
+      <p>
+        Set the click to 100 BPM. Play two bars of eighth-note triplets, three
+        notes per beat, then two bars of sextuplets, six notes per beat, without
+        touching the click. The pulse never moved and your picking hand just
+        doubled its speed. That ratio, not the tempo dial, is what builds speed:
+        you reach the fast motion immediately, against a beat that stays put, so
+        any drift is audible against a reference that did not shift.
+      </p>
+      <h2>Three modes</h2>
+      <ul>
+        <li>
+          <strong>Ratios</strong> — two loops, two subdivisions, one fixed BPM,
+          with configurable bars per loop, rest beats between them and a count-in.
+        </li>
+        <li>
+          <strong>Speed</strong> — progressive tempo. The BPM ramps after N bars
+          along a linear, logarithmic, stepback or pyramid curve.
+        </li>
+        <li>
+          <strong>Metronome</strong> — a straight click: 8 subdivisions, 7 time
+          signatures, configurable accent grouping.
+        </li>
+      </ul>
+      <h2>Everything else</h2>
+      <ul>
+        <li>Nine click sounds, synthesized at click time, with separate volume for accents, beats and subdivisions.</li>
+        <li>Saved presets, tap tempo, a countdown practice timer and keyboard shortcuts.</li>
+        <li>An in-app field manual explaining the method.</li>
+        <li>Installable as a PWA, works offline, no account, no tracking, no backend.</li>
+        <li>Free and open source under the MIT license.</li>
+      </ul>
+      <p>
+        Source code:
+        <a href="https://github.com/frankbirzle/ratio9">github.com/frankbirzle/ratio9</a>
+      </p>
+    </noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
