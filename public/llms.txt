@@ -10,9 +10,9 @@ Site: https://ratio9.frankbirzle.de/
 Source: https://github.com/frankbirzle/ratio9 (MIT)
 Author: Frank Birzle. Non-commercial side project.
 
-The app is a client-rendered single-page app and its articles live behind hash
-routes, so a crawler cannot reach them as separate URLs. This file carries the
-substance instead.
+The trainer itself is a client-rendered single-page app, so this file carries
+what its interface would otherwise hide. The articles are pre-rendered at build
+time and can be fetched directly at the URLs listed below.
 
 ## What subdivision ratio training is
 
@@ -64,19 +64,21 @@ Add one variable at a time.
 6. Only then raise the tempo, and rebuild from one note, because the fast
    motion is a different motion.
 
-## In-app articles
+## Articles (the field manual)
 
-Readable at https://ratio9.frankbirzle.de/ under the field manual.
+Index: https://ratio9.frankbirzle.de/articles
 
-- **Why I built a ratio trainer instead of another metronome** — a book about
-  talent hotbeds, five YouTube guitarists saying variations of the same thing,
-  and a plateau that would not move.
-- **The three zones, and why only one of them builds speed** — comfort, edge of
-  ability, speed burst. Most players spend a whole session in the wrong one.
-- **The myelin story, and what actually survives scrutiny** — the "perfect reps
-  wrap myelin around the circuit" claim, and why the evidence is thinner than
-  the guitar internet suggests.
-- **How I actually use the speed trainer** — the exact routine, start to finish.
+- [Why I built a ratio trainer instead of another metronome](https://ratio9.frankbirzle.de/articles/why-i-built-a-ratio-trainer):
+  a book about talent hotbeds, five YouTube guitarists saying variations of the
+  same thing, and a plateau that would not move.
+- [The three zones, and why only one of them builds speed](https://ratio9.frankbirzle.de/articles/the-three-zones):
+  comfort, edge of ability, speed burst. Most players spend a whole session in
+  the wrong one.
+- [The myelin story, and what actually survives scrutiny](https://ratio9.frankbirzle.de/articles/the-myelin-story):
+  the "perfect reps wrap myelin around the circuit" claim, and why the evidence
+  is thinner than the guitar internet suggests.
+- [How I actually use the speed trainer](https://ratio9.frankbirzle.de/articles/how-i-use-the-speed-trainer):
+  the exact routine, start to finish.
 
 ## Technical
 

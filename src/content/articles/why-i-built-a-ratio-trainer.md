@@ -15,7 +15,7 @@ I heard about it on a podcast: *The Talent Code* by Daniel Coyle. Coyle travelle
 
 His answer runs through myelin, the fatty sheath that insulates nerve fibres. The argument is that correct, effortful repetition at the edge of your ability causes your body to wrap the relevant circuits in more myelin, that thicker myelin means faster and cleaner signal, and that this is the physical substrate of skill. Deep practice builds myelin, myelin is mastery.
 
-That book reframed practice for me, and it is why I started paying attention to *how* I was practising rather than just how long. I will add one honest caveat, because I went looking for the underlying research afterwards and it is thinner than the book suggests. I wrote that up separately in [the myelin story](#/articles/the-myelin-story). The short version: keep the emphasis on precise, attentive repetition, drop myelin as the reason it works.
+That book reframed practice for me, and it is why I started paying attention to *how* I was practising rather than just how long. I will add one honest caveat, because I went looking for the underlying research afterwards and it is thinner than the book suggests. I wrote that up separately in [the myelin story](/articles/the-myelin-story). The short version: keep the emphasis on precise, attentive repetition, drop myelin as the reason it works.
 
 ## Five people saying the same thing in different words
 
@@ -31,7 +31,7 @@ Which is the same idea as Coyle's, minus the neuroscience, and arguably more use
 
 The most useful version of that advice I picked up is a four-step loop, and it is the one thing I would keep if I had to throw the rest away. Catch the exact moment the error happens, not "that run was messy" but the specific note or transition. Go back a step: drop the tempo and shrink the material to the smallest fragment that still contains the failure. Then, slowly and deliberately, work out what actually caused it, a late fretting finger, hands drifting out of sync, tension in the wrist, a string change the picking hand was not set up for. Only then speed it back up, until the error disappears.
 
-The diagnosis step is the one everybody skips, myself included, because playing it again feels like progress and thinking about it does not. But a repetition contains no diagnosis. Play a passage fifty times without isolating what fails and you have installed the fault fifty times more securely. That is [the same conclusion the research points at](#/articles/the-myelin-story), arrived at by people who never read the research.
+The diagnosis step is the one everybody skips, myself included, because playing it again feels like progress and thinking about it does not. But a repetition contains no diagnosis. Play a passage fifty times without isolating what fails and you have installed the fault fifty times more securely. That is [the same conclusion the research points at](/articles/the-myelin-story), arrived at by people who never read the research.
 
 [Bernth](https://www.youtube.com/bernthguitar) and [Lukas Kocka](https://www.youtube.com/c/LukasKocka) both go hard on hand synchronisation and on staying relaxed at tempo, which turns out to be the actual bottleneck far more often than raw hand speed.
 
@@ -93,4 +93,4 @@ Fork it, use it, strip it for parts. If you find a bug, open an issue or send a 
 
 This is not a hack that skips the work. It reorganises the work. You still have to put in the hours, still have to stay relaxed, still have to stop when a passage is failing the same way in the same place rather than grinding it. The ratio is a better tool for finding the fast motion, not a substitute for looking after your hands.
 
-If you want the practice framework I use around it, [the three zones](#/articles/the-three-zones) is the piece to read next.
+If you want the practice framework I use around it, [the three zones](/articles/the-three-zones) is the piece to read next.

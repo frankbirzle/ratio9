@@ -14,7 +14,7 @@ import { useDualLoop } from "./hooks/useDualLoop";
 import { useProgressiveTempo } from "./hooks/useProgressiveTempo";
 import { usePresets } from "./hooks/usePresets";
 import { useCountdownTimer } from "./hooks/useCountdownTimer";
-import { useHashRoute } from "./hooks/useHashRoute";
+import { useRoute } from "./hooks/useRoute";
 import { ArticleList, ArticleView } from "./components/Articles";
 import { SiteFooter } from "./components/SiteFooter";
 import { Legal } from "./components/Legal";
@@ -502,7 +502,7 @@ function Trainer() {
 						</button>
 					</div>
 					<div className="header-actions">
-						<a href="#/articles" className="manual-link">
+						<a href="/articles" className="manual-link">
 							<svg
 								width="14"
 								height="14"
@@ -685,7 +685,7 @@ function Trainer() {
 
 				{/* Latest note */}
 				{latestArticle && (
-					<a href={`#/articles/${latestArticle.slug}`} className="latest-note">
+					<a href={`/articles/${latestArticle.slug}`} className="latest-note">
 						<span className="latest-note-label">Latest note</span>
 						<span className="latest-note-rule" />
 						<span className="latest-note-title">{latestArticle.title}</span>
@@ -728,7 +728,7 @@ function Trainer() {
 }
 
 export default function App() {
-	const route = useHashRoute();
+	const route = useRoute();
 
 	if (
 		typeof window !== "undefined" &&

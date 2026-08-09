@@ -27,5 +27,10 @@
 /index.html
   Cache-Control: no-cache
 
+# Pre-rendered article pages. They embed the fingerprinted asset names, so a
+# stale copy would boot an old bundle.
+/articles/*
+  Cache-Control: no-cache
+
 /manifest.webmanifest
   Cache-Control: no-cache

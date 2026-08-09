@@ -1,10 +1,12 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
+import { prerenderArticles } from "./prerender.ts";
 
 export default defineConfig({
 	plugins: [
 		react(),
+		prerenderArticles(),
 		VitePWA({
 			registerType: "autoUpdate",
 			manifest: {
@@ -31,6 +33,9 @@ export default defineConfig({
 			workbox: {
 				globPatterns: ["**/*.{js,css,html,ico,png,svg,woff2,wav}"],
 				maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
+				// The article URLs are real pre-rendered files, so the navigation
+				// fallback must not answer them with the app shell.
+				navigateFallbackDenylist: [/^\/articles(\/|$)/],
 			},
 		}),
 	],

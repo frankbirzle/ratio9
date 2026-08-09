@@ -5,7 +5,7 @@ summary: One note, one string, two beats. Then everything else gets added one va
 tags: practice, routine
 ---
 
-This is the routine, not the theory. If you want the reasoning behind it, [the three zones](#/articles/the-three-zones) and [why I built this](#/articles/why-i-built-a-ratio-trainer) cover that. What follows is what I actually do when I sit down with the app.
+This is the routine, not the theory. If you want the reasoning behind it, [the three zones](/articles/the-three-zones) and [why I built this](/articles/why-i-built-a-ratio-trainer) cover that. What follows is what I actually do when I sit down with the app.
 
 The whole thing is built on adding one variable at a time. Right hand, then duration, then left hand, then notes, then position shifts, then tempo. Six things, never two at once. Every time something falls apart, it is obvious which addition caused it, because only one thing changed.
 

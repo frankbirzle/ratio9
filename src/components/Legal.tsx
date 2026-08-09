@@ -13,7 +13,7 @@ export function Legal() {
 	return (
 		<div className="article-page">
 			<header className="app-header">
-				<a href="#/" className="logo article-brand">
+				<a href="/" className="logo article-brand">
 					<div className="logo-icon">
 						<svg className="logo-mark" viewBox="9 9 46 46" role="img" aria-label="Ratio·9">
 							<rect x="9" y="30.4" width="12.1" height="24.6" rx="3.9" fill="#4CC9F0" />
@@ -28,7 +28,7 @@ export function Legal() {
 						<div className="logo-sub">Guitar speed trainer</div>
 					</div>
 				</a>
-				<a href="#/" className="article-back">
+				<a href="/" className="article-back">
 					Back to trainer
 				</a>
 			</header>

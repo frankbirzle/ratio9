@@ -3,7 +3,7 @@ import { ArticleNotes } from "./ArticleNotes";
 
 function Brand() {
 	return (
-		<a href="#/" className="logo article-brand">
+		<a href="/" className="logo article-brand">
 			<div className="logo-icon">
 				<svg className="logo-mark" viewBox="9 9 46 46" role="img" aria-label="Ratio·9">
 					<rect x="9" y="30.4" width="12.1" height="24.6" rx="3.9" fill="#4CC9F0" />
@@ -26,7 +26,7 @@ export function ArticleList() {
 		<div className="article-page">
 			<header className="app-header">
 				<Brand />
-				<a href="#/" className="article-back">
+				<a href="/" className="article-back">
 					Back to trainer
 				</a>
 			</header>
@@ -41,7 +41,7 @@ export function ArticleList() {
 
 			<div className="article-grid">
 				{articles.map((a) => (
-					<a key={a.slug} href={`#/articles/${a.slug}`} className="article-card">
+					<a key={a.slug} href={`/articles/${a.slug}`} className="article-card">
 						<div className="article-card-meta">
 							<span>{formatDate(a.date)}</span>
 							<span className="article-dot">·</span>
@@ -71,14 +71,14 @@ export function ArticleView({ slug }: { slug: string }) {
 			<div className="article-page">
 				<header className="app-header">
 					<Brand />
-					<a href="#/articles" className="article-back">
+					<a href="/articles" className="article-back">
 						All writing
 					</a>
 				</header>
 				<div className="article-intro">
 					<h1 className="article-list-title">Not found</h1>
 					<p className="article-list-sub">
-						No article called “{slug}”. <a href="#/articles">See what there is.</a>
+						No article called “{slug}”. <a href="/articles">See what there is.</a>
 					</p>
 				</div>
 			</div>
@@ -89,7 +89,7 @@ export function ArticleView({ slug }: { slug: string }) {
 		<div className="article-page">
 			<header className="app-header">
 				<Brand />
-				<a href="#/articles" className="article-back">
+				<a href="/articles" className="article-back">
 					Field manual
 				</a>
 			</header>

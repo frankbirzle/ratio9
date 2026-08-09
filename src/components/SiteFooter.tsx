@@ -15,10 +15,10 @@ export function SiteFooter({ showHints = false }: SiteFooterProps) {
 				</span>
 			)}
 			<div className="footer-links">
-				<a href="#/" className="footer-link">
+				<a href="/" className="footer-link">
 					Trainer
 				</a>
-				<a href="#/articles" className="footer-link">
+				<a href="/articles" className="footer-link">
 					Field manual
 				</a>
 				<a
@@ -32,7 +32,7 @@ export function SiteFooter({ showHints = false }: SiteFooterProps) {
 					</svg>
 					GitHub
 				</a>
-				<a href="#/legal" className="footer-link">
+				<a href="/legal" className="footer-link">
 					Imprint &amp; privacy
 				</a>
 				<a

@@ -29,7 +29,7 @@ If mistakes become constant and unmanageable, you overshot. Drop back toward com
 
 Well above your clean tempo, five to seven notes, relaxation prioritised over accuracy.
 
-This one takes some getting used to, because it looks like bad practice. You are deliberately playing something you cannot play cleanly, and you are not trying to clean it up. The goal is exposure to the fast motion, which as I have argued [elsewhere](#/articles/why-i-built-a-ratio-trainer) is often a genuinely different movement from the slow one rather than a sped-up version of it.
+This one takes some getting used to, because it looks like bad practice. You are deliberately playing something you cannot play cleanly, and you are not trying to clean it up. The goal is exposure to the fast motion, which as I have argued [elsewhere](/articles/why-i-built-a-ratio-trainer) is often a genuinely different movement from the slow one rather than a sped-up version of it.
 
 Keep it short. Five to seven notes, no more. Do not chase note count and do not chase a clean take.
 

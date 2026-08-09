@@ -56,4 +56,4 @@ Because the metaphor generates bad advice. "Myelin wraps whatever you repeat" im
 
 Keep myelin as a loose way of saying "practice changes the brain." Do not practise toward it. Practise toward finding errors precisely and killing them, which is the part that has evidence behind it.
 
-If you want the practical framework built on that evidence, [the three zones](#/articles/the-three-zones) is where it turns into a session plan.
+If you want the practical framework built on that evidence, [the three zones](/articles/the-three-zones) is where it turns into a session plan.

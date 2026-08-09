@@ -7,6 +7,10 @@
 	// _headers in that directory is applied automatically.
 	"assets": {
 		"directory": "./dist",
+		// The build pre-renders one file per article at articles/<slug>/index.html.
+		// This serves them at /articles/<slug>, without the trailing slash, which
+		// is the URL in the sitemap and in every canonical tag.
+		"html_handling": "auto-trailing-slash",
 		// The app uses hash routing, so deep links never hit the origin as
 		// separate paths. SPA handling is still correct for anything unknown.
 		"not_found_handling": "single-page-application"
