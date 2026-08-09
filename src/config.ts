@@ -17,13 +17,15 @@ export const STORAGE_KEY_PRESETS = "gst:presets";
 export const MAX_PRESETS = 50;
 export const SAVE_DEBOUNCE_MS = 500;
 
+// No "∞" entry: an unlimited session is now the "rounds" side of the session-end
+// control, not a timer value.
 export const TIMER_PRESETS_SEC = [
-	{ label: "∞", value: 0 },
 	{ label: "1m", value: 60 },
 	{ label: "2m", value: 120 },
 	{ label: "3m", value: 180 },
 	{ label: "5m", value: 300 },
 	{ label: "10m", value: 600 },
+	{ label: "15m", value: 900 },
 ];
 
 export const SUBDIVISIONS: {
@@ -139,6 +141,7 @@ export function isPhaseAccent(
 export function getDefaultSettings(): AppSettings {
 	return {
 		mode: "ratios-training",
+		limitMode: "rounds",
 		timeSignature: { preset: "4/4", beatsPerBar: 4, beatUnit: 4 },
 		sound: {
 			soundId: "super-click",

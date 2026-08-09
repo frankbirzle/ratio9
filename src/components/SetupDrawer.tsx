@@ -43,8 +43,9 @@ export function SetupDrawer({
 				{s.mode === "ratios-training" && (
 					<div className="drawer-section">
 						<div className="drawer-section-title">Loop cycle</div>
+						{/* Rounds lives in the session-end card, since it is a session
+						    length decision rather than loop structure. */}
 						{[
-							{ label: "Rounds", hint: "Loop 1 → loop 2 cycles", val: dl.rounds, set: (v: number) => updateSettings({ dualLoop: { ...dl, rounds: clamp(v, 1, 20) } }), lo: 1, hi: 20 },
 							{ label: "Rest beats", hint: "Gap to switch licks", val: dl.restBeats, set: (v: number) => updateSettings({ dualLoop: { ...dl, restBeats: clamp(v, 0, 8) } }), lo: 0, hi: 8 },
 							{ label: "Count-in · first", hint: "Beats before round 1", val: dl.initialCountIn, set: (v: number) => updateSettings({ dualLoop: { ...dl, initialCountIn: clamp(v, 0, 8) } }), lo: 0, hi: 8 },
 							{ label: "Count-in · repeat", hint: "Beats before each round", val: dl.repeatCountIn, set: (v: number) => updateSettings({ dualLoop: { ...dl, repeatCountIn: clamp(v, 0, 8) } }), lo: 0, hi: 8 },

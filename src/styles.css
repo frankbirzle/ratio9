@@ -675,3 +675,54 @@ select option { background: #16191C; color: var(--text-primary); }
 .tempo-session-label {
   font: 400 8px/1 var(--font-mono); letter-spacing: .24em; color: var(--text-dim);
 }
+
+/* ---- Session end control (D-spec) ---- */
+.limit-switcher {
+  display: flex; padding: 4px; gap: 4px; margin-bottom: 16px;
+  background: linear-gradient(180deg, #101315, #171B1E);
+  border: 1px solid #23272B; border-radius: var(--radius-md);
+  box-shadow: inset 0 2px 6px rgba(0,0,0,.7);
+}
+.limit-btn {
+  flex: 1; border: none; cursor: pointer;
+  padding: 10px 12px; border-radius: 9px;
+  font: 500 12px/1 var(--font-ui); letter-spacing: .05em;
+  background: transparent; color: var(--text-muted);
+  transition: all var(--transition);
+}
+.limit-btn.active {
+  background: linear-gradient(180deg, #2A2F34, #1E2226);
+  color: #F2F4F6;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.09), 0 2px 6px rgba(0,0,0,.5);
+}
+
+.limit-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 13px 15px; border-radius: var(--radius-md);
+  background: var(--bg-inset); border: 1px solid #23272B;
+}
+.limit-row-text { display: flex; flex-direction: column; gap: 4px; }
+.limit-row-label { font: 500 12.5px/1 var(--font-ui); color: #C7CCD1; }
+.limit-row-hint { font: 400 9.5px/1 var(--font-mono); color: var(--text-dim); }
+.limit-stepper { display: flex; align-items: center; gap: 8px; }
+.limit-step-btn {
+  width: 34px; height: 34px; border-radius: 10px; cursor: pointer;
+  background: linear-gradient(180deg, #23272C, #181B1E);
+  border: 1px solid var(--border-input); color: #C7CCD1;
+  font: 400 16px/1 var(--font-mono);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+  transition: border-color 140ms ease;
+}
+.limit-step-btn:hover { border-color: var(--border-hover); }
+.limit-step-value {
+  min-width: 28px; text-align: center;
+  font: 400 17px/1 var(--font-mono); color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.limit-caption {
+  padding: 13px 15px; border-radius: var(--radius-md);
+  background: var(--bg-inset); border: 1px solid #23272B;
+  display: flex; flex-direction: column; gap: 5px;
+}
+.limit-caption-text { font: 400 9.5px/1.5 var(--font-mono); color: var(--text-dim); }

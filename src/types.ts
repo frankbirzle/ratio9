@@ -79,8 +79,19 @@ export interface TimerSettings {
 	durationSec: number | null; // null = free (no limit)
 }
 
+/**
+ * What ends a session. Exactly one authority, so rounds and the timer can no
+ * longer race each other.
+ *
+ * "rounds" means whatever the mode's own natural end is: ratios stops after N
+ * rounds, speed stops when the ramp reaches its target, and the plain
+ * metronome simply runs until stopped.
+ */
+export type LimitMode = "rounds" | "time";
+
 export interface AppSettings {
 	mode: Mode;
+	limitMode: LimitMode;
 	timeSignature: TimeSignature;
 	sound: SoundSettings;
 	timer: TimerSettings;

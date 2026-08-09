@@ -151,7 +151,9 @@ export function useDualLoop(
 				} else if (st.phase === "loop2") {
 					if (st.beatInPhase >= s.dualLoop.loop2.beats) {
 						st.beatInPhase = 0;
-						if (st.round >= s.dualLoop.rounds) {
+						// In timed mode the countdown owns the ending, so rounds cycle
+						// indefinitely rather than stopping at the configured count.
+						if (s.limitMode !== "time" && st.round >= s.dualLoop.rounds) {
 							// Fix 16: Stop immediately instead of setTimeout(100)
 							st.phase = "complete";
 							schedulerRef.current?.stop();

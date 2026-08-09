@@ -31,6 +31,17 @@ function deepMerge(
 			(result as Record<string, unknown>)[key] = storedVal;
 		}
 	}
+
+	// Settings saved before the session-end rework: "∞" was a timer value
+	// (durationSec null) rather than a limit mode. Those users wanted an
+	// unlimited session, which is now the rounds side of the switch.
+	if (result.timer.durationSec === null) {
+		result.limitMode = "rounds";
+		result.timer = { ...result.timer, durationSec: 120 };
+	} else if ((stored as Partial<AppSettings>).limitMode === undefined) {
+		result.limitMode = "time";
+	}
+
 	return result;
 }
 

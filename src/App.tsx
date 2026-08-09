@@ -126,11 +126,15 @@ function Trainer() {
 		);
 	}, [settings]); // eslint-disable-line
 
+	// The countdown only runs when time is the session's end condition, so it
+	// can never cut a rounds-limited session short.
+	const isTimed = settings.limitMode === "time";
+	const timerDuration = settings.timer.durationSec ?? 0;
 	useEffect(() => {
-		if (isPlaying && settings.timer.durationSec !== null)
-			countdown.start(settings.timer.durationSec);
-		else if (!isPlaying) countdown.stop();
-	}, [isPlaying, settings.timer.durationSec]); // eslint-disable-line
+		if (isPlaying && isTimed && timerDuration > 0)
+			countdown.start(timerDuration);
+		else if (!isPlaying || !isTimed) countdown.stop();
+	}, [isPlaying, isTimed, timerDuration]); // eslint-disable-line
 
 	const handleModeChange = (mode: Mode) => {
 		stopAll();
@@ -256,31 +260,36 @@ function Trainer() {
 				} count-in · ${settings.dualLoop.loop1.beats}+${settings.dualLoop.restBeats}+${settings.dualLoop.loop2.beats}`
 			: settings.timeSignature.preset;
 
-	const timerSec = settings.timer.durationSec ?? 0;
-	const showRemaining =
-		isPlaying && timerSec > 0 && countdown.remainingSec !== null;
+	const timed = isTimed;
+	const timerSec = timerDuration;
+	const showRemaining = isPlaying && timed && countdown.remainingSec !== null;
 	const sessionTime = (() => {
-		const sec = showRemaining
-			? countdown.remainingSec
-			: timerSec > 0
-				? timerSec
-				: null;
+		if (!timed) return "--:--";
+		const sec = showRemaining ? countdown.remainingSec : timerSec;
 		if (sec === null) return "--:--";
 		return `${String(Math.floor(sec / 60)).padStart(2, "0")}:${String(
 			Math.floor(sec % 60),
 		).padStart(2, "0")}`;
 	})();
-	const sessionTimeLabel =
-		timerSec > 0 ? (showRemaining ? "REMAINING" : "SESSION") : "NO LIMIT";
+	const sessionTimeLabel = timed
+		? showRemaining
+			? "REMAINING"
+			: "SESSION"
+		: "NO LIMIT";
 
 	const roundText =
 		settings.mode === "ratios-training"
-			? `Round ${Math.min(Math.max(dualLoop.currentRound, 1), settings.dualLoop.rounds)} / ${settings.dualLoop.rounds}`
+			? timed
+				? `Round ${Math.max(dualLoop.currentRound, 1)}`
+				: `Round ${Math.min(Math.max(dualLoop.currentRound, 1), settings.dualLoop.rounds)} / ${settings.dualLoop.rounds}`
 			: settings.mode === "speed-training"
 				? `${knobBpm} → ${settings.progressive.endBpm} bpm`
 				: `${settings.timeSignature.preset} · ${settings.metronomeBpm} bpm`;
-	const estText =
-		settings.mode === "ratios-training"
+	// In timed mode the duration is the setting, so the estimate shows it
+	// rather than a computed guess.
+	const estText = timed
+		? `${Math.round(timerSec / 60)}m session`
+		: settings.mode === "ratios-training"
 			? (() => {
 					const dl = settings.dualLoop;
 					const perFirst =
@@ -307,13 +316,24 @@ function Trainer() {
 					})()
 				: "";
 
-	// Timer ring percentage for knob
+	// Timer ring percentage for knob. Only drawn in timed mode.
 	const timerPct =
-		isPlaying &&
-		settings.timer.durationSec !== null &&
-		countdown.remainingSec !== null
-			? (countdown.remainingSec / settings.timer.durationSec) * 100
+		isPlaying && timed && timerSec > 0 && countdown.remainingSec !== null
+			? (countdown.remainingSec / timerSec) * 100
 			: null;
+
+	// Caption under the session-end switch for the modes without rounds
+	const roundsCaption =
+		settings.mode === "speed-training"
+			? (() => {
+					const p = settings.progressive;
+					const steps = Math.max(
+						1,
+						Math.ceil((p.endBpm - p.startBpm) / p.stepSize) + 1,
+					);
+					return `${p.startBpm} → ${p.endBpm} bpm · ${steps} steps of ${p.barsPerStep} bars`;
+				})()
+			: "Runs until you stop it";
 
 	// Keyboard (D23)
 	useEffect(() => {
@@ -638,10 +658,23 @@ function Trainer() {
 							/>
 						)}
 						<SessionCard
+							mode={settings.mode}
+							limitMode={settings.limitMode}
+							onLimitModeChange={(m) => {
+								stopAll();
+								updateSettings({ limitMode: m });
+							}}
+							rounds={settings.dualLoop.rounds}
+							onRoundsChange={(v) =>
+								updateSettings({
+									dualLoop: { ...settings.dualLoop, rounds: v },
+								})
+							}
 							timerSec={timerSec}
 							estText={estText}
+							roundsCaption={roundsCaption}
 							onTimerChange={(v) =>
-								updateSettings({ timer: { durationSec: v === 0 ? null : v } })
+								updateSettings({ timer: { durationSec: v } })
 							}
 						/>
 					</section>
