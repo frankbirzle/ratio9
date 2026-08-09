@@ -16,6 +16,7 @@ import { usePresets } from "./hooks/usePresets";
 import { useCountdownTimer } from "./hooks/useCountdownTimer";
 import { useHashRoute } from "./hooks/useHashRoute";
 import { ArticleList, ArticleView } from "./components/Articles";
+import { Legal } from "./components/Legal";
 import { articles } from "./content/articles";
 import { SoundEngine } from "./audio/SoundEngine";
 import {
@@ -657,8 +658,15 @@ function Trainer() {
 							</svg>
 							GitHub
 						</a>
-						<a href="./LICENSE" className="footer-link">MIT License</a>
-						<a href="mailto:hello@ratio9.app" className="footer-link">Contact</a>
+						<a href="#/legal" className="footer-link">Imprint &amp; privacy</a>
+						<a
+							href="https://github.com/frankbirzle/ratio9/blob/main/LICENSE"
+							target="_blank"
+							rel="noopener noreferrer"
+							className="footer-link"
+						>
+							MIT License
+						</a>
 					</div>
 				</footer>
 			</div>
@@ -709,6 +717,8 @@ export default function App() {
 			<div className="app-content">
 				{route.name === "articles" ? (
 					<ArticleList />
+				) : route.name === "legal" ? (
+					<Legal />
 				) : (
 					<ArticleView slug={route.slug} />
 				)}

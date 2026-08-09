@@ -3,11 +3,13 @@ import { useEffect, useState } from "react";
 export type Route =
 	| { name: "app" }
 	| { name: "articles" }
-	| { name: "article"; slug: string };
+	| { name: "article"; slug: string }
+	| { name: "legal" };
 
 export function parseHash(hash: string): Route {
 	const path = hash.replace(/^#\/?/, "");
 	if (path === "articles") return { name: "articles" };
+	if (path === "legal" || path === "imprint") return { name: "legal" };
 	const article = /^articles\/(.+)$/.exec(path);
 	if (article) return { name: "article", slug: article[1] };
 	return { name: "app" };

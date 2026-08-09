@@ -1,4 +1,7 @@
-export const CONTACT_EMAIL = "hello@ratio9.app";
+// Single source of truth for the public contact address. Point this at a
+// Cloudflare Email Routing alias, so it can be burned and replaced if it
+// ever gets harvested, without exposing a real mailbox.
+export const CONTACT_EMAIL = "ratio9@frankbirzle.de";
 
 /**
  * Standing notes shown at the foot of every article. Kept here rather than in
