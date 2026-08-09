@@ -726,3 +726,7 @@ select option { background: #16191C; color: var(--text-primary); }
   display: flex; flex-direction: column; gap: 5px;
 }
 .limit-caption-text { font: 400 9.5px/1.5 var(--font-mono); color: var(--text-dim); }
+
+/* Footer sits below the article column, not inside it */
+.article-page + .app-footer,
+.app-content > .app-footer { margin-top: 40px; }

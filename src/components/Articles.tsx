@@ -112,14 +112,6 @@ export function ArticleView({ slug }: { slug: string }) {
 				<ArticleNotes />
 			</article>
 
-			<div className="article-foot">
-				<a href="#/articles" className="article-back">
-					Field manual
-				</a>
-				<a href="#/" className="article-back">
-					Open the trainer
-				</a>
-			</div>
 		</div>
 	);
 }
