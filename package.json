@@ -8,7 +8,7 @@
     "type": "git",
     "url": "https://github.com/frankbirzle/ratio9"
   },
-  "homepage": "https://ratio9.app",
+  "homepage": "https://ratio9.frankbirzle.de",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

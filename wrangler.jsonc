@@ -12,6 +12,9 @@
 		"not_found_handling": "single-page-application"
 	},
 
+	// One canonical hostname: the .workers.dev address stays off.
+	"workers_dev": false,
+
 	// Cloudflare creates the DNS record and certificate for this hostname.
 	"routes": [
 		{
