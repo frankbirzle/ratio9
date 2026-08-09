@@ -2,7 +2,9 @@
 
 A dual-loop subdivision ratio metronome for guitarists who want to build picking speed systematically, rather than by nudging a tempo dial 5 BPM at a time and hoping.
 
-https://github.com/user-attachments/assets/9ee07ee9-2692-49cb-a47f-c76657e37956
+![Ratio·9 in use](./assets/showcase.webp)
+
+<sub>Silent loop. [Watch the full-resolution video](https://github.com/user-attachments/assets/9ee07ee9-2692-49cb-a47f-c76657e37956) for a closer look.</sub>
 
 ## The idea
 
