@@ -516,6 +516,8 @@ function Trainer() {
 							value={knobBpm}
 							onChange={onKnobChange}
 							timerPct={timerPct}
+							isPlaying={isPlaying}
+							onToggle={handleToggle}
 						/>
 						<div className="knob-controls">
 							<button

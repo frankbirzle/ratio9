@@ -636,3 +636,26 @@ select option { background: #16191C; color: var(--text-primary); }
 }
 .article-note a { color: #7E858C; border-bottom: 1px solid #2E3339; text-decoration: none; }
 .article-note a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* ---- Knob as start/stop ---- */
+.knob-body { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.knob-body:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.knob-body-playing {
+  border-color: #3E444B;
+  box-shadow:
+    inset 0 2px 3px rgba(255,255,255,.08),
+    inset 0 -14px 26px rgba(0,0,0,.6),
+    0 18px 34px -14px rgba(0,0,0,.95),
+    0 0 0 1px rgba(245,165,36,.22),
+    0 0 34px -6px rgba(245,165,36,.28);
+}
+.knob-hint {
+  margin-top: 7px;
+  font: 400 8.5px/1 var(--font-mono);
+  letter-spacing: .26em; text-transform: uppercase;
+  color: #4A5158;
+  transition: color var(--transition);
+}
+.knob-hint-playing { color: var(--accent); }
+.knob-body:hover .knob-hint { color: var(--text-muted); }
+.knob-body-playing:hover .knob-hint { color: var(--accent-light); }
