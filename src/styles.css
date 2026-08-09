@@ -308,24 +308,7 @@ select option { background: #16191C; color: var(--text-primary); }
 
 /* ---- Session card ---- */
 .session-card { padding: 20px 24px 22px; }
-.session-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
-.session-info { display: flex; align-items: center; gap: 14px; }
-.session-round { font: 400 11px/1 var(--font-mono); color: var(--text-secondary); font-variant-numeric: tabular-nums; }
 .session-est { font: 400 11px/1 var(--font-mono); color: var(--text-dim); }
-.session-controls { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
-.play-btn-main {
-  flex: 1 1 200px; min-height: 60px; border: none; border-radius: var(--radius-lg); cursor: pointer;
-  display: flex; align-items: center; justify-content: center; gap: 12px;
-  font: 600 14px/1 var(--font-ui); letter-spacing: .14em; text-transform: uppercase;
-  transition: all var(--transition);
-}
-.play-btn-main.playing { background: linear-gradient(180deg, #2A2F34, #1D2124); color: var(--text-primary); box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 4px 12px rgba(0,0,0,.5); }
-.play-btn-main.stopped { background: linear-gradient(180deg, #FFB43D, #E08E12); color: #1A1207; box-shadow: inset 0 1px 0 rgba(255,255,255,.4), 0 10px 26px -8px rgba(245,165,36,.55); }
-.timer-display { min-width: 132px; display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
-.timer-value { font: 300 30px/1 var(--font-mono); font-variant-numeric: tabular-nums; transition: color 200ms ease; }
-.timer-value.active { color: var(--blue); }
-.timer-value.idle { color: #3F464C; }
-.timer-label { font: 400 8px/1 var(--font-mono); letter-spacing: .24em; color: var(--text-dim); }
 
 /* ---- Timer pills (D22) ---- */
 .timer-pills { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 16px; }
@@ -637,25 +620,58 @@ select option { background: #16191C; color: var(--text-primary); }
 .article-note a { color: #7E858C; border-bottom: 1px solid #2E3339; text-decoration: none; }
 .article-note a:hover { color: var(--accent); border-bottom-color: var(--accent); }
 
-/* ---- Knob as start/stop ---- */
-.knob-body { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+/* ---- Knob as start/stop (D-spec) ---- */
+.knob-body { cursor: pointer; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
 .knob-body:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
-.knob-body-playing {
-  border-color: #3E444B;
-  box-shadow:
-    inset 0 2px 3px rgba(255,255,255,.08),
-    inset 0 -14px 26px rgba(0,0,0,.6),
-    0 18px 34px -14px rgba(0,0,0,.95),
-    0 0 0 1px rgba(245,165,36,.22),
-    0 0 34px -6px rgba(245,165,36,.28);
-}
+
 .knob-hint {
   margin-top: 7px;
-  font: 400 8.5px/1 var(--font-mono);
-  letter-spacing: .26em; text-transform: uppercase;
-  color: #4A5158;
-  transition: color var(--transition);
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 12px; border-radius: 100px;
+  transition: all 200ms ease;
+  background: linear-gradient(180deg, rgba(6,10,14,.55), rgba(12,18,24,.25));
+  border: 1px solid rgba(76,201,240,.22);
+  color: #4CC9F0;
+  box-shadow:
+    inset 0 2px 3px rgba(0,0,0,.75),
+    inset 0 -1px 0 rgba(255,255,255,.05),
+    inset 0 0 10px rgba(76,201,240,.12);
 }
-.knob-hint-playing { color: var(--accent); }
-.knob-body:hover .knob-hint { color: var(--text-muted); }
-.knob-body-playing:hover .knob-hint { color: var(--accent-light); }
+.knob-hint.playing {
+  border-color: rgba(140,152,164,.16);
+  color: #8B939A;
+  box-shadow:
+    inset 0 2px 3px rgba(0,0,0,.75),
+    inset 0 -1px 0 rgba(255,255,255,.05);
+}
+.knob-hint-icon { font-size: 9px; line-height: 1; }
+.knob-hint-label {
+  font: 600 8.5px/1 var(--font-ui);
+  letter-spacing: .18em; text-transform: uppercase;
+}
+
+/* ---- Session length card ---- */
+.session-length-header {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; margin-bottom: 16px; flex-wrap: wrap;
+}
+.session-est {
+  font: 400 11px/1 var(--font-mono); color: var(--text-dim);
+}
+
+/* ---- Session readout inside the tempo card ---- */
+.tempo-session {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 14px; margin-bottom: 13px;
+}
+.tempo-session-left { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.tempo-session-meter { font: 400 10px/1 var(--font-mono); letter-spacing: .1em; color: var(--text-dim); }
+.tempo-session-right { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; flex: 0 0 auto; }
+.tempo-session-time {
+  font: 300 26px/1 var(--font-mono); font-variant-numeric: tabular-nums;
+  transition: color 200ms ease; color: var(--text-secondary);
+}
+.tempo-session-time.active { color: var(--blue); }
+.tempo-session-label {
+  font: 400 8px/1 var(--font-mono); letter-spacing: .24em; color: var(--text-dim);
+}

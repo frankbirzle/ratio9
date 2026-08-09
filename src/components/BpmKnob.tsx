@@ -11,10 +11,9 @@ interface BpmKnobProps {
 	onToggle?: () => void;
 }
 
-// A drag has to move this far, or last this long, before it stops counting as
-// a tap. Without it, the tiny finger movement in any real tap would swallow
-// the toggle on a touchscreen.
-const TAP_SLOP_PX = 8;
+// Per the design: movement under 5px total does not start a drag, and a
+// release within 600ms of a non-drag counts as a tap.
+const DRAG_SLOP_PX = 5;
 const TAP_MAX_MS = 600;
 
 export function BpmKnob({
@@ -42,17 +41,11 @@ export function BpmKnob({
 			let dragged = false;
 
 			const move = (ev: PointerEvent) => {
-				if (
-					Math.abs(ev.clientX - startX) > TAP_SLOP_PX ||
-					Math.abs(ev.clientY - startY) > TAP_SLOP_PX
-				) {
-					dragged = true;
-				}
-				if (!dragged) return;
-				const delta = Math.round(
-					(startY - ev.clientY + (ev.clientX - startX)) * 0.4,
-				);
-				onChange(clamp(base + delta));
+				const dy = startY - ev.clientY;
+				const dx = ev.clientX - startX;
+				if (!dragged && Math.abs(dy) + Math.abs(dx) < DRAG_SLOP_PX) return;
+				dragged = true;
+				onChange(clamp(base + Math.round((dy + dx) * 0.4)));
 			};
 
 			const up = () => {
@@ -134,15 +127,13 @@ export function BpmKnob({
 				</svg>
 			)}
 			<div
-				className={`knob-body${isPlaying ? " knob-body-playing" : ""}`}
+				className="knob-body"
 				ref={knobRef}
 				role={onToggle ? "button" : undefined}
 				tabIndex={onToggle ? 0 : undefined}
 				aria-pressed={onToggle ? isPlaying : undefined}
 				aria-label={
-					onToggle
-						? `${isPlaying ? "Stop" : "Start"} at ${value} BPM. Drag to change tempo.`
-						: undefined
+					onToggle ? "Drag to set tempo, tap to start or stop" : undefined
 				}
 				onKeyDown={onToggle ? handleKeyDown : undefined}
 			>
@@ -157,10 +148,11 @@ export function BpmKnob({
 					<div className="knob-bpm">{value}</div>
 					<div className="knob-bpm-label">BPM</div>
 					{onToggle && (
-						<div
-							className={`knob-hint${isPlaying ? " knob-hint-playing" : ""}`}
-						>
-							{isPlaying ? "Tap to stop" : "Tap to start"}
+						<div className={`knob-hint${isPlaying ? " playing" : ""}`}>
+							<span className="knob-hint-icon">{isPlaying ? "■" : "▶"}</span>
+							<span className="knob-hint-label">
+								{isPlaying ? "Stop" : "Tap to start"}
+							</span>
 						</div>
 					)}
 				</div>

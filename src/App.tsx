@@ -246,9 +246,36 @@ function Trainer() {
 	})();
 
 	// Session info
+	// Session readout, shown inside the tempo card under the LED divider
+	const meterText =
+		settings.mode === "ratios-training"
+			? `${
+					dualLoop.visualRound <= 1
+						? settings.dualLoop.initialCountIn
+						: settings.dualLoop.repeatCountIn
+				} count-in · ${settings.dualLoop.loop1.beats}+${settings.dualLoop.restBeats}+${settings.dualLoop.loop2.beats}`
+			: settings.timeSignature.preset;
+
+	const timerSec = settings.timer.durationSec ?? 0;
+	const showRemaining =
+		isPlaying && timerSec > 0 && countdown.remainingSec !== null;
+	const sessionTime = (() => {
+		const sec = showRemaining
+			? countdown.remainingSec
+			: timerSec > 0
+				? timerSec
+				: null;
+		if (sec === null) return "--:--";
+		return `${String(Math.floor(sec / 60)).padStart(2, "0")}:${String(
+			Math.floor(sec % 60),
+		).padStart(2, "0")}`;
+	})();
+	const sessionTimeLabel =
+		timerSec > 0 ? (showRemaining ? "REMAINING" : "SESSION") : "NO LIMIT";
+
 	const roundText =
 		settings.mode === "ratios-training"
-			? `Round ${Math.min(dualLoop.currentRound, settings.dualLoop.rounds)} / ${settings.dualLoop.rounds}`
+			? `Round ${Math.min(Math.max(dualLoop.currentRound, 1), settings.dualLoop.rounds)} / ${settings.dualLoop.rounds}`
 			: settings.mode === "speed-training"
 				? `${knobBpm} → ${settings.progressive.endBpm} bpm`
 				: `${settings.timeSignature.preset} · ${settings.metronomeBpm} bpm`;
@@ -563,24 +590,19 @@ function Trainer() {
 								borderTop: "1px solid #212529",
 							}}
 						>
-							<div
-								style={{
-									display: "flex",
-									alignItems: "center",
-									justifyContent: "space-between",
-									marginBottom: 9,
-								}}
-							>
-								<span className="section-label">Bar</span>
-								<span
-									style={{
-										font: "400 10px/1 var(--font-mono)",
-										letterSpacing: ".1em",
-										color: "var(--text-dim)",
-									}}
-								>
-									{settings.timeSignature.preset}
-								</span>
+							<div className="tempo-session">
+								<div className="tempo-session-left">
+									<span className="section-label">{roundText || "Bar"}</span>
+									<span className="tempo-session-meter">{meterText}</span>
+								</div>
+								<div className="tempo-session-right">
+									<span
+										className={`tempo-session-time${showRemaining ? " active" : ""}`}
+									>
+										{sessionTime}
+									</span>
+									<span className="tempo-session-label">{sessionTimeLabel}</span>
+								</div>
 							</div>
 							<LedBar leds={knobLeds} />
 						</div>
@@ -616,11 +638,7 @@ function Trainer() {
 							/>
 						)}
 						<SessionCard
-							isPlaying={isPlaying}
-							onToggle={handleToggle}
-							timerSec={settings.timer.durationSec ?? 0}
-							remainingSec={countdown.remainingSec}
-							roundText={roundText}
+							timerSec={timerSec}
 							estText={estText}
 							onTimerChange={(v) =>
 								updateSettings({ timer: { durationSec: v === 0 ? null : v } })
