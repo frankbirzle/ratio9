@@ -1,0 +1,239 @@
+import { SUBDIVISIONS, getSubdivisionsForMeter } from "../config";
+import type { AppSettings, Subdivision, LoopConfig } from "../types";
+import { TickGrid } from "./TickGrid";
+
+interface RatiosTrainingPanelProps {
+	settings: AppSettings;
+	updateSettings: (patch: Partial<AppSettings>) => void;
+	isPlaying: boolean;
+	activeLoop: 1 | 2 | null;
+	activeDotIndex: number;
+	visualRound: number;
+}
+
+export function RatiosTrainingPanel({
+	settings,
+	updateSettings,
+	isPlaying,
+	activeLoop,
+	activeDotIndex,
+	visualRound,
+}: RatiosTrainingPanelProps) {
+	const dl = settings.dualLoop;
+	const subs = getSubdivisionsForMeter(settings.timeSignature.beatUnit);
+
+	const updateLoop = (which: 1 | 2, patch: Partial<LoopConfig>) => {
+		const key = which === 1 ? "loop1" : "loop2";
+		updateSettings({ dualLoop: { ...dl, [key]: { ...dl[key], ...patch } } });
+	};
+
+	const n1 =
+		SUBDIVISIONS.find((s) => s.id === dl.loop1.subdivision)?.notesPerBeat ?? 1;
+	const n2 =
+		SUBDIVISIONS.find((s) => s.id === dl.loop2.subdivision)?.notesPerBeat ?? 1;
+	const gcdVal = (() => {
+		const g = (a: number, b: number): number => (b ? g(b, a % b) : a);
+		return g(n1, n2) || 1;
+	})();
+	const nps1 = (settings.dualLoop.bpm * n1) / 60;
+	const nps2 = (settings.dualLoop.bpm * n2) / 60;
+
+	// Tick grids per loop
+	const countInBeats = visualRound <= 1 ? dl.initialCountIn : dl.repeatCountIn;
+	const mkTicks = (beats: number, n: number, phase: string, offset: number) => {
+		const out: {
+			height: number;
+			phase: string;
+			active: boolean;
+			marginLeft: number;
+		}[] = [];
+		for (let b = 0; b < beats; b++) {
+			for (let k = 0; k < n; k++) {
+				const active = isPlaying && activeDotIndex - offset === b && k === 0;
+				out.push({
+					height: active ? 34 : k === 0 ? 22 : 13,
+					phase,
+					active,
+					marginLeft: k === 0 && b > 0 ? 9 : 0,
+				});
+			}
+		}
+		return out;
+	};
+	const grid1 = mkTicks(dl.loop1.beats, n1, "loop1", countInBeats);
+	const grid2 = mkTicks(
+		dl.loop2.beats,
+		n2,
+		"loop2",
+		countInBeats + dl.loop1.beats + dl.restBeats,
+	);
+
+	const loop1Opacity = !isPlaying || activeLoop === 1 ? 1 : 0.42;
+	const loop2Opacity = !isPlaying || activeLoop === 2 ? 1 : 0.42;
+
+	return (
+		<div className="card">
+			<div className="card-top-line" />
+			<div
+				style={{
+					display: "flex",
+					alignItems: "flex-start",
+					justifyContent: "space-between",
+					gap: 16,
+					marginBottom: 20,
+				}}
+			>
+				<div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+					<span className="section-label">Subdivision ratio</span>
+					<span
+						style={{
+							font: "400 10px/1 var(--font-mono)",
+							color: "var(--text-dim)",
+						}}
+					>
+						{n1} vs {n2} notes per beat
+					</span>
+				</div>
+				<div
+					style={{
+						font: "300 34px/1 var(--font-mono)",
+						color: "#F2F4F6",
+						fontVariantNumeric: "tabular-nums",
+					}}
+				>
+					{n1 / gcdVal} : {n2 / gcdVal}
+				</div>
+			</div>
+			<div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+				{/* Loop 1 */}
+				<div className="loop-card loop1" style={{ opacity: loop1Opacity }}>
+					<div className="loop-card-header">
+						<div className="loop-card-label">
+							<div className="loop-dot loop1" />
+							<span className="section-label section-label-blue">Loop 1</span>
+						</div>
+						<span className="loop-nps">{nps1.toFixed(1)} notes/sec</span>
+					</div>
+					<div
+						style={{
+							display: "flex",
+							alignItems: "center",
+							gap: 10,
+							flexWrap: "wrap",
+						}}
+					>
+						<div
+							className="custom-select-wrap"
+							style={{ flex: "1 1 150px", minWidth: 140 }}
+						>
+							<select
+								className="custom-select"
+								value={dl.loop1.subdivision}
+								onChange={(e) =>
+									updateLoop(1, { subdivision: e.target.value as Subdivision })
+								}
+								aria-label="Loop 1 subdivision"
+							>
+								{subs.map((s) => (
+									<option key={s.id} value={s.id}>
+										{s.label}
+									</option>
+								))}
+							</select>
+							<div className="custom-select-arrow">▼</div>
+						</div>
+						<div className="mini-stepper">
+							<button
+								className="mini-stepper-btn"
+								onClick={() =>
+									updateLoop(1, { beats: Math.max(1, dl.loop1.beats - 1) })
+								}
+							>
+								−
+							</button>
+							<div className="mini-stepper-value">
+								<div className="mini-stepper-num">{dl.loop1.beats}</div>
+								<div className="mini-stepper-label">BEATS</div>
+							</div>
+							<button
+								className="mini-stepper-btn"
+								onClick={() =>
+									updateLoop(1, { beats: Math.min(16, dl.loop1.beats + 1) })
+								}
+							>
+								+
+							</button>
+						</div>
+					</div>
+					<div style={{ marginTop: 14 }}>
+						<TickGrid ticks={grid1} maxHeight={34} />
+					</div>
+				</div>
+				{/* Loop 2 */}
+				<div className="loop-card loop2" style={{ opacity: loop2Opacity }}>
+					<div className="loop-card-header">
+						<div className="loop-card-label">
+							<div className="loop-dot loop2" />
+							<span className="section-label section-label-amber">Loop 2</span>
+						</div>
+						<span className="loop-nps">{nps2.toFixed(1)} notes/sec</span>
+					</div>
+					<div
+						style={{
+							display: "flex",
+							alignItems: "center",
+							gap: 10,
+							flexWrap: "wrap",
+						}}
+					>
+						<div
+							className="custom-select-wrap"
+							style={{ flex: "1 1 150px", minWidth: 140 }}
+						>
+							<select
+								className="custom-select"
+								value={dl.loop2.subdivision}
+								onChange={(e) =>
+									updateLoop(2, { subdivision: e.target.value as Subdivision })
+								}
+								aria-label="Loop 2 subdivision"
+							>
+								{subs.map((s) => (
+									<option key={s.id} value={s.id}>
+										{s.label}
+									</option>
+								))}
+							</select>
+							<div className="custom-select-arrow">▼</div>
+						</div>
+						<div className="mini-stepper">
+							<button
+								className="mini-stepper-btn"
+								onClick={() =>
+									updateLoop(2, { beats: Math.max(1, dl.loop2.beats - 1) })
+								}
+							>
+								−
+							</button>
+							<div className="mini-stepper-value">
+								<div className="mini-stepper-num">{dl.loop2.beats}</div>
+								<div className="mini-stepper-label">BEATS</div>
+							</div>
+							<button
+								className="mini-stepper-btn"
+								onClick={() =>
+									updateLoop(2, { beats: Math.min(16, dl.loop2.beats + 1) })
+								}
+							>
+								+
+							</button>
+						</div>
+					</div>
+					<div style={{ marginTop: 14 }}>
+						<TickGrid ticks={grid2} maxHeight={34} />
+					</div>
+				</div>
+			</div>
+		</div>
+	);
+}
