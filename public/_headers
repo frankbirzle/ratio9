@@ -29,6 +29,9 @@
 
 # Pre-rendered article pages. They embed the fingerprinted asset names, so a
 # stale copy would boot an old bundle.
+/articles
+  Cache-Control: no-cache
+
 /articles/*
   Cache-Control: no-cache
 

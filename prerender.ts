@@ -26,13 +26,16 @@ export function prerenderArticles(): Plugin {
 			const assets = extractAssetTags(shell);
 			const articles = loadArticles();
 
+			// Flat .html files rather than <slug>/index.html: Cloudflare serves
+			// those at the extensionless path directly, where a directory index
+			// would redirect to a trailing slash and contradict the canonical tag.
 			for (const article of articles) {
 				write(
-					join(outDir, "articles", article.slug, "index.html"),
+					join(outDir, "articles", `${article.slug}.html`),
 					articlePage(article, assets),
 				);
 			}
-			write(join(outDir, "articles", "index.html"), listPage(articles, assets));
+			write(join(outDir, "articles.html"), listPage(articles, assets));
 			write(join(outDir, "sitemap.xml"), sitemap(articles));
 
 			this.info(`pre-rendered ${articles.length} articles + index + sitemap`);
