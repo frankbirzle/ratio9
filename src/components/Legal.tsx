@@ -1,13 +1,11 @@
 import { CONTACT_EMAIL } from "./ArticleNotes";
 
-// ---------------------------------------------------------------------------
-// FILL THESE IN. German law (§5 DDG) requires a real name and a postal address
-// a letter can actually reach — a P.O. box is not sufficient.
-// ---------------------------------------------------------------------------
+// Deliberately no street address: this is a private, non-commercial site, which
+// §5 DDG exempts from the full imprint requirement. Name, city and a working
+// email are given so anyone with a concern can reach a real person.
 const OWNER = {
-	name: "TODO: Full legal name",
-	street: "TODO: Street and number",
-	city: "TODO: Postcode and city",
+	name: "Frank Birzle",
+	city: "Munich",
 	country: "Germany",
 };
 
@@ -44,20 +42,22 @@ export function Legal() {
 
 				<div className="article-prose">
 					<h2 id="imprint">Imprint (Impressum)</h2>
-					<p>Information according to §5 DDG:</p>
 					<p>
+						Responsible for this site and its content:
+						<br />
 						{OWNER.name}
 						<br />
-						{OWNER.street}
+						{OWNER.city}, {OWNER.country}
 						<br />
-						{OWNER.city}
-						<br />
-						{OWNER.country}
+						<a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
 					</p>
 					<p>
-						Contact: <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+						Ratio·9 is operated privately and non-commercially. There is nothing
+						for sale, no advertising, and no revenue of any kind, so no
+						commercial-register or VAT details apply. If you need to reach me
+						about anything on this site, email is the fastest route and I answer
+						it myself.
 					</p>
-					<p>Responsible for the content of this site: {OWNER.name}.</p>
 
 					<h2 id="privacy">Privacy</h2>
 					<p>
