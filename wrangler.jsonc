@@ -1,0 +1,26 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "ratio9",
+	"compatibility_date": "2026-08-09",
+
+	// Static-asset Worker: no server code, Cloudflare serves ./dist directly.
+	// _headers in that directory is applied automatically.
+	"assets": {
+		"directory": "./dist",
+		// The app uses hash routing, so deep links never hit the origin as
+		// separate paths. SPA handling is still correct for anything unknown.
+		"not_found_handling": "single-page-application"
+	},
+
+	// Cloudflare creates the DNS record and certificate for this hostname.
+	"routes": [
+		{
+			"pattern": "ratio9.frankbirzle.de",
+			"custom_domain": true
+		}
+	],
+
+	"observability": {
+		"enabled": true
+	}
+}
