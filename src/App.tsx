@@ -346,14 +346,15 @@ function Trainer() {
 					e.preventDefault();
 					handleToggle();
 					break;
+				// 1 2 3 follow the tab order left to right
 				case "Digit1":
-					handleModeChange("metronome");
+					handleModeChange("ratios-training");
 					break;
 				case "Digit2":
 					handleModeChange("speed-training");
 					break;
 				case "Digit3":
-					handleModeChange("ratios-training");
+					handleModeChange("metronome");
 					break;
 				case "KeyT": {
 					if (settings.mode === "metronome") {
@@ -479,12 +480,13 @@ function Trainer() {
 							<div className="logo-sub">Guitar speed trainer</div>
 						</div>
 					</div>
+					{/* Ratios leads: it is the reason this app exists. */}
 					<div className="tab-switcher">
 						<button
-							className={`tab-btn ${settings.mode === "metronome" ? "active" : ""}`}
-							onClick={() => handleModeChange("metronome")}
+							className={`tab-btn ${settings.mode === "ratios-training" ? "active" : ""}`}
+							onClick={() => handleModeChange("ratios-training")}
 						>
-							Metronome
+							Ratios
 						</button>
 						<button
 							className={`tab-btn ${settings.mode === "speed-training" ? "active" : ""}`}
@@ -493,10 +495,10 @@ function Trainer() {
 							Speed
 						</button>
 						<button
-							className={`tab-btn ${settings.mode === "ratios-training" ? "active" : ""}`}
-							onClick={() => handleModeChange("ratios-training")}
+							className={`tab-btn ${settings.mode === "metronome" ? "active" : ""}`}
+							onClick={() => handleModeChange("metronome")}
 						>
-							Ratios
+							Metronome
 						</button>
 					</div>
 					<div className="header-actions">
