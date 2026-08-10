@@ -168,7 +168,9 @@ export function SetupDrawer({
 					<div className="preset-list">
 						{presets.map((p) => (
 							<div className="preset-item" key={p.id}>
-								<span className="preset-item-name" onClick={() => onLoadPreset(p)}>{p.name}</span>
+								{/* A button, not a span with a click handler: it fills the chip so the
+								    whole row loads the preset, and it is reachable by keyboard. */}
+								<button type="button" className="preset-item-name" onClick={() => onLoadPreset(p)} title={`Load ${p.name}`}>{p.name}</button>
 								<button className="preset-delete" onClick={() => onDeletePreset(p.id)}>✕</button>
 							</div>
 						))}
