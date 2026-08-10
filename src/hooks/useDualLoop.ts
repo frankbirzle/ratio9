@@ -1,10 +1,23 @@
 import { useRef, useState, useCallback } from "react";
 import type { SoundEngine } from "../audio/SoundEngine";
 import { MetronomeScheduler } from "../audio/scheduler";
-import { SUBDIVISIONS, BPM_MIN, BPM_MAX, isPhaseAccent } from "../config";
+import {
+	SUBDIVISIONS,
+	BPM_MIN,
+	BPM_MAX,
+	isPhaseAccent,
+	loop2Exit,
+} from "../config";
 import type { AppSettings } from "../types";
 
-type Phase = "idle" | "count-in" | "loop1" | "loop2" | "rest" | "complete";
+type Phase =
+	| "idle"
+	| "count-in"
+	| "loop1"
+	| "loop2"
+	| "rest"
+	| "landing"
+	| "complete";
 
 export function useDualLoop(
 	soundEngine: SoundEngine,
@@ -76,6 +89,24 @@ export function useDualLoop(
 		setCurrentRound(s.dualLoop.initialCountIn > 0 ? 0 : 1);
 		setActiveDotIndex(0);
 		setVisualRound(s.dualLoop.initialCountIn > 0 ? 0 : 1);
+
+		/**
+		 * Ends the session. Called either straight off the last loop-2 beat or, when
+		 * the landing beat is armed, one beat later. Stopping the scheduler here is
+		 * safe: the beat that triggered this is already scheduled in the audio graph.
+		 */
+		const finish = () => {
+			stateRef.current.phase = "complete";
+			schedulerRef.current?.stop();
+			schedulerRef.current = null;
+			queueMicrotask(() => {
+				setPhase("complete");
+				setActiveLoop(null);
+				setIsPlaying(false);
+				setActiveDotIndex(-1);
+				onToast?.("Practice complete", "success");
+			});
+		};
 
 		const callbacks = {
 			onScheduleBeat: (beatIndex: number, time: number) => {
@@ -151,20 +182,25 @@ export function useDualLoop(
 				} else if (st.phase === "loop2") {
 					if (st.beatInPhase >= s.dualLoop.loop2.beats) {
 						st.beatInPhase = 0;
-						// In timed mode the countdown owns the ending, so rounds cycle
-						// indefinitely rather than stopping at the configured count.
-						if (s.limitMode !== "time" && st.round >= s.dualLoop.rounds) {
-							// Fix 16: Stop immediately instead of setTimeout(100)
-							st.phase = "complete";
-							schedulerRef.current?.stop();
-							schedulerRef.current = null;
+						const exit = loop2Exit({
+							timed: s.limitMode === "time",
+							round: st.round,
+							rounds: s.dualLoop.rounds,
+							landingBeat: s.dualLoop.landingBeat,
+						});
+						if (exit === "landing") {
+							// One more beat, then done. Every earlier round already hands the
+							// phrase a downbeat to resolve onto (the first rest beat, or loop
+							// 1's first beat when there is no rest); this is the one the end of
+							// the session was swallowing.
+							st.phase = "landing";
 							queueMicrotask(() => {
-								setPhase("complete");
+								setPhase("landing");
 								setActiveLoop(null);
-								setIsPlaying(false);
-								setActiveDotIndex(-1);
-								onToast?.("Practice complete", "success");
 							});
+						} else if (exit === "complete") {
+							// Fix 16: Stop immediately instead of setTimeout(100)
+							finish();
 						} else {
 							st.round++;
 							st.absBeat = 0; // Reset absolute beat for new round
@@ -186,13 +222,24 @@ export function useDualLoop(
 							}
 						}
 					}
+				} else if (st.phase === "landing") {
+					// The landing beat is exactly one click. It has already been scheduled
+					// above, so the session can end right here.
+					finish();
 				}
 			},
 			onScheduleSubdivision: (_subIndex: number, time: number) => {
 				const st = stateRef.current;
 				const s = settingsRef.current!;
 				if (!s.sound.subdivisionClicksOn) return;
-				if (st.phase === "rest" || st.phase === "count-in") return;
+				// The landing beat is a bare click, not another six notes: the phrase
+				// resolves onto it, nothing is played through it.
+				if (
+					st.phase === "rest" ||
+					st.phase === "count-in" ||
+					st.phase === "landing"
+				)
+					return;
 				soundEngine.playClick(time, "subdivision", s.sound.soundId);
 			},
 			onVisualBeat: (beatIndex: number) => {

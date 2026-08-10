@@ -62,6 +62,12 @@ export function SetupDrawer({
 								</div>
 							</div>
 						))}
+						<Toggle label="Landing beat" checked={dl.landingBeat}
+							onChange={(v) => updateSettings({ dualLoop: { ...dl, landingBeat: v } })} />
+						<span className="drawer-row-hint" style={{ display: "block", marginTop: -4 }}>
+							One extra click at the very end, so a phrase that resolves onto the next
+							downbeat has something to land on
+						</span>
 					</div>
 				)}
 

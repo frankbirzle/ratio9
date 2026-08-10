@@ -297,7 +297,10 @@ function Trainer() {
 						dl.initialCountIn + dl.loop1.beats + dl.restBeats + dl.loop2.beats;
 					const perNext =
 						dl.repeatCountIn + dl.loop1.beats + dl.restBeats + dl.loop2.beats;
-					const total = perFirst + (dl.rounds - 1) * perNext;
+					const total =
+						perFirst +
+						(dl.rounds - 1) * perNext +
+						(dl.landingBeat ? 1 : 0);
 					const sec = total / (dl.bpm / 60);
 					return `≈ ${Math.floor(sec / 60)}m ${Math.round(sec % 60)}s`;
 				})()

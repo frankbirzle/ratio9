@@ -138,6 +138,25 @@ export function isPhaseAccent(
 	return beatsPerBar > 0 && beatInPhase % beatsPerBar === 0;
 }
 
+/** What follows the last beat of loop 2. */
+export type Loop2Exit = "next-round" | "landing" | "complete";
+
+/**
+ * The one decision in the ratio cycle with three outcomes and no side effects,
+ * so it is worth stating in one place: timed sessions cycle rounds forever
+ * because the countdown owns the ending, the final round hands the phrase a
+ * landing beat when one is armed, and otherwise the drill stops.
+ */
+export function loop2Exit(opts: {
+	timed: boolean;
+	round: number;
+	rounds: number;
+	landingBeat: boolean;
+}): Loop2Exit {
+	if (opts.timed || opts.round < opts.rounds) return "next-round";
+	return opts.landingBeat ? "landing" : "complete";
+}
+
 export function getDefaultSettings(): AppSettings {
 	return {
 		mode: "ratios-training",
@@ -159,6 +178,7 @@ export function getDefaultSettings(): AppSettings {
 			restBeats: 1,
 			initialCountIn: 2,
 			repeatCountIn: 1,
+			landingBeat: true,
 			progressiveEnabled: false,
 			progressiveStep: 5,
 		},

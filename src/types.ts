@@ -54,6 +54,15 @@ export interface DualLoopSettings {
 	restBeats: number;
 	initialCountIn: number;
 	repeatCountIn: number;
+	/**
+	 * One extra click after the final loop, so a phrase that resolves onto the
+	 * following downbeat has something to land on. A group of three played across
+	 * two beats is seven notes, not six: the seventh is an elision, sharing the
+	 * click that starts the next phase. Mid-session that click already exists (the
+	 * first rest beat, or loop 2's first beat when there is no rest), so this only
+	 * supplies the one the session end was missing.
+	 */
+	landingBeat: boolean;
 	progressiveEnabled: boolean;
 	progressiveStep: number;
 }
