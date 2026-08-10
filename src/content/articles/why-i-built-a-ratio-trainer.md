@@ -7,7 +7,7 @@ tags: origin, practice
 
 Hey, my name is Frank. I am a beginner to mid-level guitar player, and I am currently stuck at what I think is mostly a speed plateau.
 
-You probably know the shape of it. I can play a lick cleanly at 120. I can play it at 130. At 145 it turns to mush, and no amount of patient 5 BPM increments moves that wall. Up, break, back down, clean again, and a month later the wall has not moved an inch.
+You probably know the shape of it. I can play a lick cleanly at 80. I can play it at 90. At 100 it turns to mush, and no amount of patient 5 BPM increments moves that wall. Up, break, back down, clean again, and a month later the wall has not moved an inch.
 
 ## The book that started it
 
@@ -35,7 +35,7 @@ The diagnosis step is the one everybody skips, myself included, because playing 
 
 [Bernth](https://www.youtube.com/bernthguitar) and [Lukas Kocka](https://www.youtube.com/c/LukasKocka) both go hard on hand synchronisation and on staying relaxed at tempo, which turns out to be the actual bottleneck far more often than raw hand speed.
 
-[Matt Wright Music](https://www.youtube.com/@mattwright466) made an excellent three-part series on building speed that pulled a lot of this together for me, and it is where I first properly ran into two-way pickslanting, the mechanic [Troy Grady](https://troygrady.com) pioneered and documented in Cracking the Code. If you have never seen his [explanation of what two-way pickslanting actually is](https://troygrady.com/2018/07/16/what-is-two-way-pickslanting-and-how-does-it-work/), it is worth an hour of your life. It explains why some players' picking hands look effortless at 200 BPM while yours fights the strings.
+[Matt Wright Music](https://www.youtube.com/@mattwright466) made an excellent three-part series on building speed that pulled a lot of this together for me, and it is where I first properly ran into two-way pickslanting, the mechanic [Troy Grady](https://troygrady.com) pioneered and documented in Cracking the Code. If you have never seen his [explanation of what two-way pickslanting actually is](https://troygrady.com/2018/07/16/what-is-two-way-pickslanting-and-how-does-it-work/), it is worth an hour of your life. It explains why some players' picking hands look effortless at 150 BPM while yours fights the strings.
 
 ## The video that made it click
 
@@ -51,7 +51,7 @@ That is obviously correct once someone says it out loud, and I had never practis
 
 There is one more piece, and it is the piece that turned into this app.
 
-Slow practice refines a motion you already have. It cleans up synchronisation, it lets you notice tension, it makes a phrase familiar. What it does not do is build the fast motion, because past a certain tempo the fast motion is *a different movement*. Above roughly 150 BPM in sixteenths, most players are no longer making a series of discrete picking strokes with time to think in between. They are running a continuous oscillation and steering it.
+Slow practice refines a motion you already have. It cleans up synchronisation, it lets you notice tension, it makes a phrase familiar. What it does not do is build the fast motion, because past a certain tempo the fast motion is *a different movement*. Above roughly 110 BPM in sixteenths, most players are no longer making a series of discrete picking strokes with time to think in between. They are running a continuous oscillation and steering it.
 
 You cannot arrive at an oscillation by making discrete strokes progressively quicker. That is why the 5 BPM ladder stalls: it asks the slow movement to gradually become the fast one, and at some point it simply cannot.
 
@@ -59,9 +59,9 @@ You cannot arrive at an oscillation by making discrete strokes progressively qui
 
 What broke the plateau was not a tempo ladder. It was alternating subdivisions against a fixed pulse.
 
-Set the click to 100 BPM. Play two bars of eighth-note triplets, three notes per click. Then, without touching the click, play two bars of sextuplets, six notes per click. The beat has not moved. Your hand has just doubled its speed.
+Set the click to 70 BPM. Play two bars of eighth-note triplets, three notes per click. Then, without touching the click, play two bars of sextuplets, six notes per click. The beat has not moved. Your hand has just doubled its speed.
 
-At 100 BPM, triplets are 300 notes per minute and sextuplets are 600. Getting from one to the other by tempo would mean dragging the click from 100 to 200 and living through every broken tempo in between. By changing the subdivision instead, you get the fast motion immediately, in a context where you know exactly where the beat is because it never moved.
+At 70 BPM, triplets are 210 notes per minute and sextuplets are 420. Getting from one to the other by tempo would mean dragging the click from 70 to 140 and living through every broken tempo in between. By changing the subdivision instead, you get the fast motion immediately, in a context where you know exactly where the beat is because it never moved.
 
 The slow pass resets the motion. The fast pass pushes it. And because the pulse is constant, drift in the fast pass is obvious: you hear it against a reference that did not shift. That matters more than it sounds, because the thing that actually predicts whether practice sticks is how precisely you locate an error, not how many times you repeat the passage.
 

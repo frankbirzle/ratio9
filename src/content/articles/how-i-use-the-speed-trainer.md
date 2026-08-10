@@ -13,7 +13,7 @@ The whole thing is built on adding one variable at a time. Right hand, then dura
 
 Pick a subdivision and a phrase. I use eighth-note triplets against sextuplets, and a scale run up the G string starting on D.
 
-Set a slow tempo. I start at **85 BPM**, which feels almost insultingly slow and is exactly the point: at this stage the tempo is not the variable being trained.
+Set a slow tempo. I start at **55 BPM**, which feels almost insultingly slow and is exactly the point: at this stage the tempo is not the variable being trained. Remember the fast pass doubles the note rate on its own, so 55 on the click is already 330 notes per minute in the sextuplet pass.
 
 Ratios mode, loop 1 on eighth-note triplets, loop 2 on sextuplets, 2 beats each.
 
@@ -24,7 +24,7 @@ Play a single note. Nothing else. The ratio does the work: two beats of triplets
 What I am watching for, in order of importance:
 
 - A relaxed wrist. Not a stiff one being told to move faster.
-- Small pick strokes. The stroke that works at 200 BPM is much smaller than the one that feels natural at 85.
+- Small pick strokes. The stroke that carries the sextuplet pass is much smaller than the one that feels natural in the triplet pass.
 - A neutral pick slant. Pick centred rather than tilted, a double escape, leaving the string in both directions. That escape shrinks on its own as tempo rises, which is fine, but it starts neutral.
 
 One note. One string. No fretting hand. That is the entire exercise, and it is worth more sessions than you would think.

@@ -16,12 +16,12 @@ time and can be fetched directly at the URLs listed below.
 
 ## What subdivision ratio training is
 
-Set the click to 100 BPM. Play two bars of eighth-note triplets, three notes
+Set the click to 70 BPM. Play two bars of eighth-note triplets, three notes
 per beat, then two bars of sextuplets, six notes per beat, without touching the
 click. The pulse never moved and the picking hand just doubled its speed.
 
-Getting from 300 to 600 notes per minute by tempo instead would mean dragging
-the metronome from 100 to 200 BPM and surviving every broken tempo in between.
+Getting from 210 to 420 notes per minute by tempo instead would mean dragging
+the metronome from 70 to 140 BPM and surviving every broken tempo in between.
 Changing the subdivision reaches the fast motion immediately, against a beat
 that stays put, so when the fast pass drifts it is audible against a reference
 that did not shift. The slow pass resets the motion, the fast pass pushes it.
