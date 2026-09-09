@@ -9,6 +9,7 @@ import {
 	loop2Exit,
 } from "../config";
 import type { AppSettings } from "../types";
+import { ratioSets, nextSet, type RatioSet } from "../ratioPlan";
 
 type Phase =
 	| "idle"
@@ -30,6 +31,10 @@ export function useDualLoop(
 	const [phase, setPhase] = useState<Phase>("idle");
 	const [activeDotIndex, setActiveDotIndex] = useState(-1);
 	const [visualRound, setVisualRound] = useState(0);
+	// The set being played: tempo and phrase length can differ from the knob
+	// and the steppers once the ramp or the build-up is on.
+	const [liveSet, setLiveSet] = useState<RatioSet | null>(null);
+	const [liveSetIndex, setLiveSetIndex] = useState(0);
 	const schedulerRef = useRef<MetronomeScheduler | null>(null);
 	const settingsRef = useRef<AppSettings | null>(null);
 	const visualMapRef = useRef<Map<number, { absBeat: number; round: number }>>(
@@ -44,6 +49,8 @@ export function useDualLoop(
 		round: 0,
 		activeSub:
 			"eighth-triplet" as AppSettings["dualLoop"]["loop1"]["subdivision"],
+		sets: [] as RatioSet[],
+		setIndex: 0,
 	});
 
 	const setSettings = useCallback((settings: AppSettings) => {
@@ -60,6 +67,8 @@ export function useDualLoop(
 		setPhase("idle");
 		setActiveDotIndex(-1);
 		setVisualRound(0);
+		setLiveSet(null);
+		setLiveSetIndex(0);
 		visualMapRef.current.clear();
 	}, []);
 
@@ -76,6 +85,10 @@ export function useDualLoop(
 		visualMapRef.current.clear();
 		resyncNotifiedRef.current = false;
 
+		// The session plan is fixed at start; the knob and steppers are read
+		// through it from here on, so a mid-session settings change waits for the
+		// next start.
+		const sets = ratioSets(s.dualLoop);
 		// Fix 5: Initialize round to 1 when initialCountIn === 0
 		stateRef.current = {
 			beatInPhase: 0,
@@ -83,7 +96,11 @@ export function useDualLoop(
 			phase: s.dualLoop.initialCountIn > 0 ? "count-in" : "loop1",
 			round: s.dualLoop.initialCountIn > 0 ? 0 : 1,
 			activeSub: s.dualLoop.loop1.subdivision,
+			sets,
+			setIndex: 0,
 		};
+		setLiveSet(sets[0]);
+		setLiveSetIndex(0);
 		setPhase(stateRef.current.phase);
 		setActiveLoop(stateRef.current.phase === "loop1" ? 1 : null);
 		setCurrentRound(s.dualLoop.initialCountIn > 0 ? 0 : 1);
@@ -152,7 +169,7 @@ export function useDualLoop(
 						});
 					}
 				} else if (st.phase === "loop1") {
-					if (st.beatInPhase >= s.dualLoop.loop1.beats) {
+					if (st.beatInPhase >= st.sets[st.setIndex].loop1Beats) {
 						st.beatInPhase = 0;
 						if (s.dualLoop.restBeats > 0) {
 							st.phase = "rest";
@@ -180,13 +197,15 @@ export function useDualLoop(
 						});
 					}
 				} else if (st.phase === "loop2") {
-					if (st.beatInPhase >= s.dualLoop.loop2.beats) {
+					if (st.beatInPhase >= st.sets[st.setIndex].loop2Beats) {
 						st.beatInPhase = 0;
+						const following = nextSet(st.sets, st.setIndex);
 						const exit = loop2Exit({
 							timed: s.limitMode === "time",
 							round: st.round,
 							rounds: s.dualLoop.rounds,
 							landingBeat: s.dualLoop.landingBeat,
+							hasNextSet: following !== null,
 						});
 						if (exit === "landing") {
 							// One more beat, then done. Every earlier round already hands the
@@ -202,6 +221,17 @@ export function useDualLoop(
 							// Fix 16: Stop immediately instead of setTimeout(100)
 							finish();
 						} else {
+							if (exit === "next-set" && following) {
+								// A finished set hands over to the next: longer phrase first,
+								// faster tempo once every phrase length has been played.
+								st.setIndex++;
+								st.round = 0;
+								const idx = st.setIndex;
+								queueMicrotask(() => {
+									setLiveSet(following);
+									setLiveSetIndex(idx);
+								});
+							}
 							st.round++;
 							st.absBeat = 0; // Reset absolute beat for new round
 							if (s.dualLoop.repeatCountIn > 0) {
@@ -258,7 +288,10 @@ export function useDualLoop(
 				resyncNotifiedRef.current = true;
 				onToast?.("Timing resynced, some beats were dropped", "danger");
 			},
-			getBpm: () => settingsRef.current?.dualLoop.bpm ?? 120,
+			getBpm: () => {
+				const st = stateRef.current;
+				return st.sets[st.setIndex]?.bpm ?? settingsRef.current?.dualLoop.bpm ?? 120;
+			},
 			getNotesPerBeat: () => {
 				const st = stateRef.current;
 				const found = SUBDIVISIONS.find((x) => x.id === st.activeSub);
@@ -304,6 +337,8 @@ export function useDualLoop(
 		phase,
 		activeDotIndex,
 		visualRound,
+		liveSet,
+		liveSetIndex,
 		setSettings,
 		start,
 		stop,

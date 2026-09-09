@@ -63,8 +63,23 @@ export interface DualLoopSettings {
 	 * supplies the one the session end was missing.
 	 */
 	landingBeat: boolean;
+	/**
+	 * Keep the note count equal across both loops: loop 2's length is derived
+	 * from loop 1 and the two subdivisions (2 beats of 8th triplets is 6 notes,
+	 * so loop 2 gets 1 beat of sextuplets). Loop 1 then only steps in lengths
+	 * that leave loop 2 a whole number of beats.
+	 */
+	linkLoops: boolean;
+	/** Tempo ramp: after every full set of rounds, step the tempo up. */
 	progressiveEnabled: boolean;
 	progressiveStep: number;
+	progressiveEndBpm: number;
+	/**
+	 * Start each tempo with the shortest linked phrase and grow loop 1 by one
+	 * link-step per set of rounds until it reaches the configured length:
+	 * 2:1, 4:2, 6:3, 8:4. Needs the loop link.
+	 */
+	buildUp: boolean;
 }
 
 export interface ProgressiveSettings {

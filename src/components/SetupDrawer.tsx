@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { TIME_SIGNATURES, SOUND_OPTIONS } from "../config";
+import { TIME_SIGNATURES, SOUND_OPTIONS, BPM_MAX } from "../config";
+import { applyLoopLink } from "../ratioPlan";
 import type { AppSettings, TimeSignaturePreset, SoundId, Preset } from "../types";
 import { VolumeSlider } from "./VolumeSlider";
 import { Toggle } from "./Toggle";
@@ -64,9 +65,50 @@ export function SetupDrawer({
 						))}
 						<Toggle label="Landing beat" checked={dl.landingBeat}
 							onChange={(v) => updateSettings({ dualLoop: { ...dl, landingBeat: v } })} />
-						<span className="drawer-row-hint" style={{ display: "block", marginTop: -4 }}>
+						<span className="drawer-row-hint" style={{ display: "block", marginTop: 4, lineHeight: 1.5 }}>
 							One extra click at the very end, so a phrase that resolves onto the next
 							downbeat has something to land on
+						</span>
+						<Toggle label="Link loops" checked={dl.linkLoops}
+							onChange={(v) => updateSettings({ dualLoop: applyLoopLink({ ...dl, linkLoops: v, buildUp: v && dl.buildUp }) })} />
+						<span className="drawer-row-hint" style={{ display: "block", marginTop: 4, lineHeight: 1.5 }}>
+							Same number of notes in both loops: 2 beats of 8th triplets against
+							1 beat of sextuplets. Loop 2 follows loop 1
+						</span>
+					</div>
+				)}
+
+				{/* Mode-specific: Ratios → Speed */}
+				{s.mode === "ratios-training" && (
+					<div className="drawer-section">
+						<div className="drawer-section-title">Speed</div>
+						<Toggle label="Tempo ramp" checked={dl.progressiveEnabled}
+							onChange={(v) => updateSettings({ dualLoop: { ...dl, progressiveEnabled: v } })} />
+						<span className="drawer-row-hint" style={{ display: "block", marginTop: 4, lineHeight: 1.5 }}>
+							After every full set of rounds the tempo steps up, until the end tempo has been played
+						</span>
+						{dl.progressiveEnabled && [
+							{ label: "Step", hint: "BPM per set", val: dl.progressiveStep, set: (v: number) => updateSettings({ dualLoop: { ...dl, progressiveStep: clamp(v, 1, 20) } }) },
+							{ label: "End tempo", hint: `Start is the knob, ${dl.bpm} bpm`, val: dl.progressiveEndBpm, set: (v: number) => updateSettings({ dualLoop: { ...dl, progressiveEndBpm: clamp(v, dl.bpm, BPM_MAX) } }) },
+						].map((row) => (
+							<div className="drawer-row" key={row.label}>
+								<div className="drawer-row-label">
+									<span className="drawer-row-name">{row.label}</span>
+									<span className="drawer-row-hint">{row.hint}</span>
+								</div>
+								<div className="mini-stepper">
+									<button className="drawer-mini-stepper-btn" onClick={() => row.set(row.val - 1)}>−</button>
+									<span className="drawer-mini-stepper-val">{row.val}</span>
+									<button className="drawer-mini-stepper-btn" onClick={() => row.set(row.val + 1)}>+</button>
+								</div>
+							</div>
+						))}
+						<Toggle label="Build up the phrase" checked={dl.buildUp && dl.linkLoops} disabled={!dl.linkLoops}
+							onChange={(v) => updateSettings({ dualLoop: { ...dl, buildUp: v } })} />
+						<span className="drawer-row-hint" style={{ display: "block", marginTop: 4, lineHeight: 1.5 }}>
+							{dl.linkLoops
+								? "Each tempo starts with the shortest phrase and grows loop 1 one step per set: 2:1, 4:2, 6:3, up to the length set above"
+								: "Needs linked loops"}
 						</span>
 					</div>
 				)}

@@ -139,21 +139,26 @@ export function isPhaseAccent(
 }
 
 /** What follows the last beat of loop 2. */
-export type Loop2Exit = "next-round" | "landing" | "complete";
+export type Loop2Exit = "next-round" | "next-set" | "landing" | "complete";
 
 /**
- * The one decision in the ratio cycle with three outcomes and no side effects,
- * so it is worth stating in one place: timed sessions cycle rounds forever
- * because the countdown owns the ending, the final round hands the phrase a
- * landing beat when one is armed, and otherwise the drill stops.
+ * The one decision in the ratio cycle with no side effects, so it is worth
+ * stating in one place: rounds cycle until the set is done, a finished set
+ * hands over to the next one (a longer phrase or a faster tempo, see
+ * ratioPlan.ts), timed sessions then cycle forever because the countdown owns
+ * the ending, the final round hands the phrase a landing beat when one is
+ * armed, and otherwise the drill stops.
  */
 export function loop2Exit(opts: {
 	timed: boolean;
 	round: number;
 	rounds: number;
 	landingBeat: boolean;
+	hasNextSet?: boolean;
 }): Loop2Exit {
-	if (opts.timed || opts.round < opts.rounds) return "next-round";
+	if (opts.round < opts.rounds) return "next-round";
+	if (opts.hasNextSet) return "next-set";
+	if (opts.timed) return "next-round";
 	return opts.landingBeat ? "landing" : "complete";
 }
 
@@ -173,14 +178,17 @@ export function getDefaultSettings(): AppSettings {
 		dualLoop: {
 			bpm: 120,
 			loop1: { subdivision: "eighth-triplet", beats: 4 },
-			loop2: { subdivision: "sextuplet", beats: 4 },
+			loop2: { subdivision: "sextuplet", beats: 2 },
 			rounds: 5,
 			restBeats: 1,
 			initialCountIn: 2,
 			repeatCountIn: 1,
 			landingBeat: true,
+			linkLoops: true,
 			progressiveEnabled: false,
-			progressiveStep: 5,
+			progressiveStep: 2,
+			progressiveEndBpm: 140,
+			buildUp: false,
 		},
 		progressive: {
 			startBpm: 80,

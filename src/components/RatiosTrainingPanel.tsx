@@ -1,6 +1,7 @@
 import { SUBDIVISIONS, getSubdivisionsForMeter } from "../config";
 import type { AppSettings, Subdivision, LoopConfig } from "../types";
 import { TickGrid } from "./TickGrid";
+import { applyLoopLink, loop1Step, LOOP_BEATS_MAX, type RatioSet } from "../ratioPlan";
 
 interface RatiosTrainingPanelProps {
 	settings: AppSettings;
@@ -9,6 +10,8 @@ interface RatiosTrainingPanelProps {
 	activeLoop: 1 | 2 | null;
 	activeDotIndex: number;
 	visualRound: number;
+	liveSet: RatioSet | null;
+	liveSetIndex: number;
 }
 
 export function RatiosTrainingPanel({
@@ -18,19 +21,29 @@ export function RatiosTrainingPanel({
 	activeLoop,
 	activeDotIndex,
 	visualRound,
+	liveSet,
+	liveSetIndex,
 }: RatiosTrainingPanelProps) {
 	const dl = settings.dualLoop;
 	const subs = getSubdivisionsForMeter(settings.timeSignature.beatUnit);
 
+	// The link is enforced here, at write time, so the rest of the app keeps
+	// reading loop2.beats as a plain number.
 	const updateLoop = (which: 1 | 2, patch: Partial<LoopConfig>) => {
 		const key = which === 1 ? "loop1" : "loop2";
-		updateSettings({ dualLoop: { ...dl, [key]: { ...dl[key], ...patch } } });
+		updateSettings({
+			dualLoop: applyLoopLink({ ...dl, [key]: { ...dl[key], ...patch } }),
+		});
 	};
 
 	const n1 =
 		SUBDIVISIONS.find((s) => s.id === dl.loop1.subdivision)?.notesPerBeat ?? 1;
 	const n2 =
 		SUBDIVISIONS.find((s) => s.id === dl.loop2.subdivision)?.notesPerBeat ?? 1;
+	// Linked: loop 1 moves in whole link-steps, loop 2 is derived and read-only.
+	const step1 = dl.linkLoops ? loop1Step(n1, n2) : 1;
+	const beats1 = isPlaying && liveSet ? liveSet.loop1Beats : dl.loop1.beats;
+	const beats2 = isPlaying && liveSet ? liveSet.loop2Beats : dl.loop2.beats;
 	const gcdVal = (() => {
 		const g = (a: number, b: number): number => (b ? g(b, a % b) : a);
 		return g(n1, n2) || 1;
@@ -39,7 +52,8 @@ export function RatiosTrainingPanel({
 	const nps2 = (settings.dualLoop.bpm * n2) / 60;
 
 	// Tick grids per loop
-	const countInBeats = visualRound <= 1 ? dl.initialCountIn : dl.repeatCountIn;
+	const countInBeats =
+		visualRound <= 1 && liveSetIndex === 0 ? dl.initialCountIn : dl.repeatCountIn;
 	const mkTicks = (beats: number, n: number, phase: string, offset: number) => {
 		const out: {
 			height: number;
@@ -60,12 +74,12 @@ export function RatiosTrainingPanel({
 		}
 		return out;
 	};
-	const grid1 = mkTicks(dl.loop1.beats, n1, "loop1", countInBeats);
+	const grid1 = mkTicks(beats1, n1, "loop1", countInBeats);
 	const grid2 = mkTicks(
-		dl.loop2.beats,
+		beats2,
 		n2,
 		"loop2",
-		countInBeats + dl.loop1.beats + dl.restBeats,
+		countInBeats + beats1 + dl.restBeats,
 	);
 
 	const loop1Opacity = !isPlaying || activeLoop === 1 ? 1 : 0.42;
@@ -146,19 +160,21 @@ export function RatiosTrainingPanel({
 							<button
 								className="mini-stepper-btn"
 								onClick={() =>
-									updateLoop(1, { beats: Math.max(1, dl.loop1.beats - 1) })
+									updateLoop(1, { beats: Math.max(step1, dl.loop1.beats - step1) })
 								}
 							>
 								−
 							</button>
 							<div className="mini-stepper-value">
-								<div className="mini-stepper-num">{dl.loop1.beats}</div>
+								<div className="mini-stepper-num">{beats1}</div>
 								<div className="mini-stepper-label">BEATS</div>
 							</div>
 							<button
 								className="mini-stepper-btn"
 								onClick={() =>
-									updateLoop(1, { beats: Math.min(16, dl.loop1.beats + 1) })
+									updateLoop(1, {
+										beats: Math.min(LOOP_BEATS_MAX, dl.loop1.beats + step1),
+									})
 								}
 							>
 								+
@@ -206,9 +222,14 @@ export function RatiosTrainingPanel({
 							</select>
 							<div className="custom-select-arrow">▼</div>
 						</div>
-						<div className="mini-stepper">
+						<div
+							className="mini-stepper"
+							style={dl.linkLoops ? { opacity: 0.55 } : undefined}
+							title={dl.linkLoops ? "Linked to loop 1: same number of notes" : undefined}
+						>
 							<button
 								className="mini-stepper-btn"
+								disabled={dl.linkLoops}
 								onClick={() =>
 									updateLoop(2, { beats: Math.max(1, dl.loop2.beats - 1) })
 								}
@@ -216,13 +237,16 @@ export function RatiosTrainingPanel({
 								−
 							</button>
 							<div className="mini-stepper-value">
-								<div className="mini-stepper-num">{dl.loop2.beats}</div>
-								<div className="mini-stepper-label">BEATS</div>
+								<div className="mini-stepper-num">{beats2}</div>
+								<div className="mini-stepper-label">
+									{dl.linkLoops ? "LINKED" : "BEATS"}
+								</div>
 							</div>
 							<button
 								className="mini-stepper-btn"
+								disabled={dl.linkLoops}
 								onClick={() =>
-									updateLoop(2, { beats: Math.min(16, dl.loop2.beats + 1) })
+									updateLoop(2, { beats: Math.min(LOOP_BEATS_MAX, dl.loop2.beats + 1) })
 								}
 							>
 								+

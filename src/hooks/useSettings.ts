@@ -5,6 +5,7 @@ import {
 	getDefaultSettings,
 } from "../config";
 import type { AppSettings } from "../types";
+import { applyLoopLink } from "../ratioPlan";
 
 // Deep merge: one level deep — merges top-level keys and one level of nested objects
 function deepMerge(
@@ -42,6 +43,8 @@ function deepMerge(
 		result.limitMode = "time";
 	}
 
+	// Settings saved before the loop link default on: 4:4 becomes 4:2.
+	result.dualLoop = applyLoopLink(result.dualLoop);
 	return result;
 }
 

@@ -11,6 +11,7 @@ import { useToast, ToastContainer } from "./components/Toast";
 import { useSettings } from "./hooks/useSettings";
 import { useMetronome } from "./hooks/useMetronome";
 import { useDualLoop } from "./hooks/useDualLoop";
+import { applyLoopLink, ratioSets } from "./ratioPlan";
 import { useProgressiveTempo } from "./hooks/useProgressiveTempo";
 import { usePresets } from "./hooks/usePresets";
 import { useCountdownTimer } from "./hooks/useCountdownTimer";
@@ -169,7 +170,7 @@ function Trainer() {
 			metronomeSubdivision: isValid(settings.metronomeSubdivision)
 				? settings.metronomeSubdivision
 				: (fallback as Subdivision),
-			dualLoop: {
+			dualLoop: applyLoopLink({
 				...settings.dualLoop,
 				loop1: {
 					...settings.dualLoop.loop1,
@@ -183,7 +184,7 @@ function Trainer() {
 						? settings.dualLoop.loop2.subdivision
 						: (fallback as Subdivision),
 				},
-			},
+			}),
 			progressive: {
 				...settings.progressive,
 				subdivision: isValid(settings.progressive.subdivision)
@@ -193,6 +194,9 @@ function Trainer() {
 		});
 	};
 
+	const ratioSetList = ratioSets(settings.dualLoop);
+	const ratioSetCount = ratioSetList.length;
+
 	// BPM value for the knob
 	const knobBpm =
 		settings.mode === "speed-training"
@@ -200,8 +204,25 @@ function Trainer() {
 				? progressive.currentBpm
 				: settings.progressive.startBpm
 			: settings.mode === "ratios-training"
-				? settings.dualLoop.bpm
+				? isPlaying && dualLoop.liveSet
+					? dualLoop.liveSet.bpm
+					: settings.dualLoop.bpm
 				: settings.metronomeBpm;
+
+	// The initial count-in only precedes the very first round; every later
+	// round, including the first of a new set, gets the repeat count-in.
+	const firstRoundOfSession =
+		dualLoop.visualRound <= 1 && dualLoop.liveSetIndex === 0;
+
+	// Phrase lengths as played: the build-up grows them set by set.
+	const liveLoop1Beats =
+		isPlaying && dualLoop.liveSet
+			? dualLoop.liveSet.loop1Beats
+			: settings.dualLoop.loop1.beats;
+	const liveLoop2Beats =
+		isPlaying && dualLoop.liveSet
+			? dualLoop.liveSet.loop2Beats
+			: settings.dualLoop.loop2.beats;
 
 	const onKnobChange = (v: number) => {
 		if (settings.mode === "metronome") updateSettings({ metronomeBpm: v });
@@ -220,18 +241,15 @@ function Trainer() {
 	const knobLeds = (() => {
 		const segs = (() => {
 			if (settings.mode === "ratios-training") {
-				const ci =
-					dualLoop.visualRound <= 1
-						? settings.dualLoop.initialCountIn
-						: settings.dualLoop.repeatCountIn;
+				const ci = firstRoundOfSession
+					? settings.dualLoop.initialCountIn
+					: settings.dualLoop.repeatCountIn;
 				const out: { phase: string }[] = [];
 				for (let i = 0; i < ci; i++) out.push({ phase: "countin" });
-				for (let i = 0; i < settings.dualLoop.loop1.beats; i++)
-					out.push({ phase: "loop1" });
+				for (let i = 0; i < liveLoop1Beats; i++) out.push({ phase: "loop1" });
 				for (let i = 0; i < settings.dualLoop.restBeats; i++)
 					out.push({ phase: "rest" });
-				for (let i = 0; i < settings.dualLoop.loop2.beats; i++)
-					out.push({ phase: "loop2" });
+				for (let i = 0; i < liveLoop2Beats; i++) out.push({ phase: "loop2" });
 				return out;
 			}
 			return Array.from({ length: settings.timeSignature.beatsPerBar }, () => ({
@@ -255,10 +273,10 @@ function Trainer() {
 	const meterText =
 		settings.mode === "ratios-training"
 			? `${
-					dualLoop.visualRound <= 1
+					firstRoundOfSession
 						? settings.dualLoop.initialCountIn
 						: settings.dualLoop.repeatCountIn
-				} count-in · ${settings.dualLoop.loop1.beats}+${settings.dualLoop.restBeats}+${settings.dualLoop.loop2.beats}`
+				} count-in · ${liveLoop1Beats}+${settings.dualLoop.restBeats}+${liveLoop2Beats}`
 			: settings.timeSignature.preset;
 
 	const timed = isTimed;
@@ -280,9 +298,12 @@ function Trainer() {
 
 	const roundText =
 		settings.mode === "ratios-training"
-			? timed
-				? `Round ${Math.max(dualLoop.currentRound, 1)}`
-				: `Round ${Math.min(Math.max(dualLoop.currentRound, 1), settings.dualLoop.rounds)} / ${settings.dualLoop.rounds}`
+			? (timed
+					? `Round ${Math.max(dualLoop.currentRound, 1)}`
+					: `Round ${Math.min(Math.max(dualLoop.currentRound, 1), settings.dualLoop.rounds)} / ${settings.dualLoop.rounds}`) +
+				(ratioSetCount > 1
+					? ` · set ${isPlaying ? dualLoop.liveSetIndex + 1 : 1} / ${ratioSetCount}`
+					: "")
 			: settings.mode === "speed-training"
 				? `${knobBpm} → ${settings.progressive.endBpm} bpm`
 				: `${settings.timeSignature.preset} · ${settings.metronomeBpm} bpm`;
@@ -293,15 +314,17 @@ function Trainer() {
 		: settings.mode === "ratios-training"
 			? (() => {
 					const dl = settings.dualLoop;
-					const perFirst =
-						dl.initialCountIn + dl.loop1.beats + dl.restBeats + dl.loop2.beats;
-					const perNext =
-						dl.repeatCountIn + dl.loop1.beats + dl.restBeats + dl.loop2.beats;
-					const total =
-						perFirst +
-						(dl.rounds - 1) * perNext +
-						(dl.landingBeat ? 1 : 0);
-					const sec = total / (dl.bpm / 60);
+					// Every set repeats the round structure at its own tempo and phrase
+					// length, so the estimate sums the sets rather than one round shape.
+					let sec = 0;
+					ratioSetList.forEach((set, i) => {
+						const body = set.loop1Beats + dl.restBeats + set.loop2Beats;
+						const perFirst = (i === 0 ? dl.initialCountIn : dl.repeatCountIn) + body;
+						const perNext = dl.repeatCountIn + body;
+						sec += (perFirst + (dl.rounds - 1) * perNext) / (set.bpm / 60);
+					});
+					const last = ratioSetList[ratioSetList.length - 1];
+					if (dl.landingBeat && last) sec += 60 / last.bpm;
 					return `≈ ${Math.floor(sec / 60)}m ${Math.round(sec % 60)}s`;
 				})()
 			: settings.mode === "speed-training"
@@ -652,6 +675,8 @@ function Trainer() {
 								activeLoop={dualLoop.activeLoop}
 								activeDotIndex={dualLoop.activeDotIndex}
 								visualRound={dualLoop.visualRound}
+								liveSet={dualLoop.liveSet}
+								liveSetIndex={dualLoop.liveSetIndex}
 							/>
 						)}
 						{settings.mode === "speed-training" && (
