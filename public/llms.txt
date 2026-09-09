@@ -28,9 +28,13 @@ that did not shift. The slow pass resets the motion, the fast pass pushes it.
 
 ## Modes
 
-- **Ratios** — two loops, two subdivisions, one fixed BPM. Independent bar
-  counts per loop, configurable rest beats between them so the picking hand can
-  reset, and a count-in before the first round.
+- **Ratios** — two loops, two subdivisions, one fixed BPM. Loop 2's length is
+  derived from loop 1 so both loops carry the same number of notes (2 beats of
+  8th triplets against 1 beat of sextuplets); the link can be switched off for
+  independent beat counts. Configurable rest beats between the loops so the
+  picking hand can reset, a count-in before the first round, an optional
+  build-up that grows the phrase 2:1, 4:2, 6:3, 8:4 one set of rounds at a
+  time, and an optional tempo ramp that steps the BPM up after every set.
 - **Speed** — progressive tempo. The BPM ramps automatically after N bars along
   one of four curves: linear, logarithmic, stepback and pyramid.
 - **Metronome** — a straight click: 8 subdivisions, 7 time signatures,
@@ -79,6 +83,10 @@ Index: https://ratio9.frankbirzle.de/articles
   is thinner than the guitar internet suggests.
 - [How I actually use the speed trainer](https://ratio9.frankbirzle.de/articles/how-i-use-the-speed-trainer):
   the exact routine, start to finish.
+- [Linked loops, a slow ramp, and letting the app run my routine](https://ratio9.frankbirzle.de/articles/linked-loops-and-a-slow-ramp):
+  loop 2 follows loop 1 so both loops carry the same number of notes, the
+  phrase grows 2:1, 4:2, 6:3, 8:4 on its own, and the tempo steps up two beats
+  per minute after every set of rounds.
 
 ## Technical
 
