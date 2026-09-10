@@ -398,6 +398,25 @@ select option { background: #16191C; color: var(--text-primary); }
 .drawer-mini-stepper-btn:hover { border-color: var(--border-hover); }
 .drawer-mini-stepper-val { min-width: 26px; text-align: center; font: 400 15px/1 var(--font-mono); color: var(--text-primary); font-variant-numeric: tabular-nums; }
 
+/* ---- Typed BPM field (drawer) ---- */
+.bpm-input {
+  display: inline-flex; align-items: baseline; gap: 6px;
+  height: 34px; padding: 0 12px; border-radius: 9px; cursor: text;
+  background: linear-gradient(180deg, var(--bg-input-top) 0%, var(--bg-input-bottom) 100%);
+  border: 1px solid var(--border-input);
+  transition: border-color 140ms ease, box-shadow 140ms ease;
+}
+.bpm-input:hover { border-color: var(--border-hover); }
+.bpm-input.focused { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(245,165,36,.14); }
+.bpm-input input {
+  width: 3ch; min-width: 3ch; background: none; border: none; outline: none; padding: 0;
+  color: var(--text-primary); text-align: right; caret-color: var(--accent);
+  font: 400 17px/34px var(--font-mono); font-variant-numeric: tabular-nums;
+}
+.bpm-input input::selection { background: rgba(245,165,36,.35); }
+.bpm-input-unit { font: 400 8px/1 var(--font-mono); letter-spacing: .18em; text-transform: uppercase; color: var(--text-dim); }
+.bpm-input.focused .bpm-input-unit { color: var(--accent); }
+
 /* ---- Preset section in drawer ---- */
 .preset-save-row { display: flex; gap: 8px; margin-bottom: 12px; }
 .preset-input {

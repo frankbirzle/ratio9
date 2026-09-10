@@ -4,6 +4,7 @@ import { applyLoopLink } from "../ratioPlan";
 import type { AppSettings, TimeSignaturePreset, SoundId, Preset } from "../types";
 import { VolumeSlider } from "./VolumeSlider";
 import { Toggle } from "./Toggle";
+import { BpmInput } from "./BpmInput";
 import type { SoundEngine } from "../audio/SoundEngine";
 
 interface SetupDrawerProps {
@@ -87,22 +88,34 @@ export function SetupDrawer({
 						<span className="drawer-row-hint" style={{ display: "block", marginTop: 4, lineHeight: 1.5 }}>
 							After every full set of rounds the tempo steps up, until the end tempo has been played
 						</span>
-						{dl.progressiveEnabled && [
-							{ label: "Step", hint: "BPM per set", val: dl.progressiveStep, set: (v: number) => updateSettings({ dualLoop: { ...dl, progressiveStep: clamp(v, 1, 20) } }) },
-							{ label: "End tempo", hint: `Start is the knob, ${dl.bpm} bpm`, val: dl.progressiveEndBpm, set: (v: number) => updateSettings({ dualLoop: { ...dl, progressiveEndBpm: clamp(v, dl.bpm, BPM_MAX) } }) },
-						].map((row) => (
-							<div className="drawer-row" key={row.label}>
-								<div className="drawer-row-label">
-									<span className="drawer-row-name">{row.label}</span>
-									<span className="drawer-row-hint">{row.hint}</span>
+						{dl.progressiveEnabled && (
+							<>
+								<div className="drawer-row">
+									<div className="drawer-row-label">
+										<span className="drawer-row-name">Step</span>
+										<span className="drawer-row-hint">BPM per set</span>
+									</div>
+									<div className="mini-stepper">
+										<button className="drawer-mini-stepper-btn" onClick={() => updateSettings({ dualLoop: { ...dl, progressiveStep: clamp(dl.progressiveStep - 1, 1, 20) } })}>−</button>
+										<span className="drawer-mini-stepper-val">{dl.progressiveStep}</span>
+										<button className="drawer-mini-stepper-btn" onClick={() => updateSettings({ dualLoop: { ...dl, progressiveStep: clamp(dl.progressiveStep + 1, 1, 20) } })}>+</button>
+									</div>
 								</div>
-								<div className="mini-stepper">
-									<button className="drawer-mini-stepper-btn" onClick={() => row.set(row.val - 1)}>−</button>
-									<span className="drawer-mini-stepper-val">{row.val}</span>
-									<button className="drawer-mini-stepper-btn" onClick={() => row.set(row.val + 1)}>+</button>
+								<div className="drawer-row">
+									<div className="drawer-row-label">
+										<span className="drawer-row-name">End tempo</span>
+										<span className="drawer-row-hint">Start is the knob, {dl.bpm} bpm</span>
+									</div>
+									<BpmInput
+										value={dl.progressiveEndBpm}
+										min={dl.bpm}
+										max={BPM_MAX}
+										ariaLabel="End tempo in BPM"
+										onCommit={(v) => updateSettings({ dualLoop: { ...dl, progressiveEndBpm: v } })}
+									/>
 								</div>
-							</div>
-						))}
+							</>
+						)}
 						<Toggle label="Build up the phrase" checked={dl.buildUp && dl.linkLoops} disabled={!dl.linkLoops}
 							onChange={(v) => updateSettings({ dualLoop: { ...dl, buildUp: v } })} />
 						<span className="drawer-row-hint" style={{ display: "block", marginTop: 4, lineHeight: 1.5 }}>
