@@ -1,5 +1,6 @@
 import { useRef, useCallback } from "react";
 import { BPM_MIN, BPM_MAX } from "../config";
+import { KNOB_BPM_PER_PX, snapBpm } from "../knobMath";
 
 interface BpmKnobProps {
 	value: number;
@@ -45,7 +46,7 @@ export function BpmKnob({
 				const dx = ev.clientX - startX;
 				if (!dragged && Math.abs(dy) + Math.abs(dx) < DRAG_SLOP_PX) return;
 				dragged = true;
-				onChange(clamp(base + Math.round((dy + dx) * 0.4)));
+				onChange(clamp(snapBpm(base + (dy + dx) * KNOB_BPM_PER_PX)));
 			};
 
 			const up = () => {
